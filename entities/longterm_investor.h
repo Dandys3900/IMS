@@ -9,7 +9,7 @@
 */
 class LongTermInvestor : public Investor {
     public:
-        LongTermInvestor(double initial_balance);
+        LongTermInvestor(double initial_balance, Coin* coin);
         ~LongTermInvestor();
 
         void Behavior()               override;

@@ -9,9 +9,10 @@
 class Investor : public Process {
     private:
         double balance;
+        Coin* coin;
 
     public:
-        Investor(double initial_balance)
+        Investor(double initial_balance, Coin* coin)
             : balance(initial_balance)
         {
         }

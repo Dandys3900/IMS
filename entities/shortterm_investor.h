@@ -9,7 +9,7 @@
 */
 class ShortTermInvestor : public Investor {
     public:
-        ShortTermInvestor(double initial_balance);
+        ShortTermInvestor(double initial_balance, Coin* coin);
         ~ShortTermInvestor();
 
         void Behavior()               override;

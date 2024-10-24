@@ -8,14 +8,15 @@ class CryptoMiner : public Process {
         double coins_mined;
         double mining_rate;
         double mining_costs;
+        Coin* coin;
 
     public:
-        CryptoMiner(double initial_rate, double initial_costs);
+        CryptoMiner(double initial_rate, double initial_costs, Coin* coin);
         ~CryptoMiner();
 
         void Behavior() override;
         void SetMiningCosts(double new_value);
-        const double GetTotalMinedCoins();
+        double GetTotalMinedCoins();
 };
 
 #endif // CRYPTO_MINER_H

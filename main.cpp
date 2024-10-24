@@ -1,6 +1,13 @@
 #include "entities/includes.h"
+#include "json_parser/json.hpp"
+
+using json = nlohmann::json;
 
 int main (int argc, char *argv[]) {
+    // Load simulation config from JSON file
+    std::ifstream config_file("sim_config.json");
+    json sim_config = json::parse(config_file);
+
     // Simulate for 1 year
     Init(0, 365);
 

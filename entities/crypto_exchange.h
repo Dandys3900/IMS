@@ -1,7 +1,8 @@
 #ifndef CRYPTO_EXCHANGE_H
 #define CRYPTO_EXCHANGE_H
 
-#include "includes.h"
+#include "crypto_coin.h"
+#include "base_investor.h"
 
 // Transaction types
 enum TransactionType {

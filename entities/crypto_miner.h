@@ -1,7 +1,8 @@
 #ifndef CRYPTO_MINER_H
 #define CRYPTO_MINER_H
 
-#include "includes.h"
+#include "crypto_coin.h"
+#include <simlib.h>
 
 class CryptoMiner : public Process {
     private:

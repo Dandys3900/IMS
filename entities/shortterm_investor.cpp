@@ -1,4 +1,4 @@
-#include "longterm_investor.h"
+#include "shortterm_investor.h"
 
 ShortTermInvestor::ShortTermInvestor(double initial_balance, Coin* coin)
     : Investor(initial_balance, coin)

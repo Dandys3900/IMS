@@ -1,8 +1,6 @@
 #ifndef CRYPTOCOIN_H
 #define CRYPTOCOIN_H
 
-#include "includes.h"
-
 class Coin {
     private:
         double price;

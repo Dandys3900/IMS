@@ -8,15 +8,15 @@ class CryptoMiner : public Process {
     private:
         double coins_mined;
         double mining_rate;
-        double mining_costs;
+        double initial_effeciency;
         Coin* coin;
 
     public:
-        CryptoMiner(double initial_rate, double initial_costs, Coin* coin);
+        CryptoMiner(double initial_rate, double initial_effeciency, Coin* coin);
         ~CryptoMiner();
 
         void Behavior() override;
-        void SetMiningCosts(double new_value);
+        void SetMiningEfficiency(double new_value);
         double GetTotalMinedCoins();
 };
 

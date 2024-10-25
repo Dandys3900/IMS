@@ -16,16 +16,18 @@ class Exchange : public Facility {
         double initial_coins;
         double sold_coins;
         double stacked_coins;
+        double gov_taxes;
         Investor** customers;
         Coin* coin;
 
     public:
-        Exchange(double fee, double init_coins, Investor** customers, Coin* coin);
+        Exchange(double fee, double init_coins, double gov_taxes, Investor** customers, Coin* coin);
         ~Exchange();
 
-        void ExecuteTransaction(double amount, Investor* buyer, TransactionType type);
+        double ExecuteTransaction(double amount, Investor* buyer, TransactionType type);
         void ClosingExchange();
         double getInterestRate();
+        void UpdateGovTaxes(double new_value);
 };
 
 #endif // CRYPTO_EXCHANGE_H

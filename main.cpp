@@ -23,11 +23,15 @@ int main (int argc, char *argv[]) {
     CryptoMiner* miner = new CryptoMiner(10, 100, coin);
     miner->Activate();
 
+    CryptoMiner* miners[] = {miner};
+    TechDeveloper* techdev = new TechDeveloper(1.2, miners);
+    techdev->Activate();
+
     Investor* customers[] = {long_investor, short_investor};
-    Exchange* exchange = new Exchange(0.01, 2500, customers, coin);
+    Exchange* exchange = new Exchange(0.01, 2500, 0.15, customers, coin);
 
     Exchange* exchanges[] = {exchange};
-    Government* government = new Government(exchanges);
+    Government* government = new Government(0.15, exchanges);
     government->Activate();
 
     ElonTweet* elon_tweet = new ElonTweet(coin);
@@ -37,6 +41,15 @@ int main (int argc, char *argv[]) {
 
     // Output simulation statistics
     SIMLIB_statistics.Output();
+
+    // Cleanup
+    delete elon_tweet;
+    delete government;
+    delete[] exchanges;
+    delete[] customers;
+    delete techdev;
+    delete[] miners;
+    delete coin;
 
     return EXIT_SUCCESS;
 }

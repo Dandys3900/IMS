@@ -6,9 +6,11 @@ class Coin {
         double price;
         double total_supply;
         double circulating_supply;
+        // Coins available for mining
+        double available_coins;
 
     public:
-        Coin(double initial_price, double total_supply, double circulating_suply);
+        Coin(double initial_price, double total_supply, double circulating_supply);
         ~Coin();
 
         void IncreaseSupply(double amount);
@@ -16,6 +18,7 @@ class Coin {
         void IncreasePrice(double factor);
         void DecreasePrice(double factor);
         void UpdatePrice();
+        double MineCoins(double amount);
         double getCurrentPrice();
 };
 

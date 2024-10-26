@@ -1,8 +1,8 @@
 #ifndef BASE_INVESTOR_H
 #define BASE_INVESTOR_H
 
+#include "includes.h"
 #include "crypto_coin.h"
-#include <simlib.h>
 
 /**
  * Base class for investors

@@ -1,17 +1,17 @@
 #ifndef TECH_DEVELOPER_H
 #define TECH_DEVELOPER_H
 
+#include "includes.h"
 #include "crypto_miner.h"
-#include <simlib.h>
 
 class TechDeveloper : public Process {
     private:
         // Helps miners mine more coins
         double efficiency_boost;
-        CryptoMiner** miners;
+        unordered_set<CryptoMiner*> miners;
 
     public:
-        TechDeveloper(double efficiency_boost, CryptoMiner** miners);
+        TechDeveloper(double efficiency_boost, unordered_set<CryptoMiner*> miners);
         ~TechDeveloper();
 
         void Behavior() override;

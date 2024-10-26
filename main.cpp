@@ -1,7 +1,28 @@
 #include "entities/includes.h"
 #include "json_parser/json.hpp"
 
+/***** SIMULATION ENTITIES *****/
+#include "entities/crypto_coin.h"
+#include "entities/base_investor.h"
+#include "entities/longterm_investor.h"
+#include "entities/shortterm_investor.h"
+#include "entities/crypto_miner.h"
+#include "entities/government.h"
+#include "entities/crypto_exchange.h"
+#include "entities/elon_tweet.h"
+#include "entities/tech_devs.h"
+
 using json = nlohmann::json;
+
+template <typename T>
+void freeSet(std::unordered_set<T*>& set) {
+    // Properly free set pointers
+    for (T* ptr : set) {
+        delete ptr;
+    }
+    // Clear set itself
+    set.clear();
+}
 
 int main (int argc, char *argv[]) {
     // Load simulation config from JSON file
@@ -23,14 +44,21 @@ int main (int argc, char *argv[]) {
     CryptoMiner* miner = new CryptoMiner(10, 100, coin);
     miner->Activate();
 
-    CryptoMiner* miners[] = {miner};
+    unordered_set<CryptoMiner*> miners = {
+        miner
+    };
     TechDeveloper* techdev = new TechDeveloper(1.2, miners);
     techdev->Activate();
 
-    Investor* customers[] = {long_investor, short_investor};
+    unordered_set<Investor*> customers = {
+        long_investor,
+        short_investor
+    };
     Exchange* exchange = new Exchange(0.01, 2500, 0.15, customers, coin);
 
-    Exchange* exchanges[] = {exchange};
+    unordered_set<Exchange*> exchanges = {
+        exchange
+    };
     Government* government = new Government(0.15, exchanges);
     government->Activate();
 
@@ -45,10 +73,10 @@ int main (int argc, char *argv[]) {
     // Cleanup
     delete elon_tweet;
     delete government;
-    delete[] exchanges;
-    delete[] customers;
+    freeSet(exchanges);
+    freeSet(customers);
     delete techdev;
-    delete[] miners;
+    freeSet(miners);
     delete coin;
 
     return EXIT_SUCCESS;

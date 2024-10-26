@@ -4,10 +4,9 @@
 class Coin {
     private:
         double price;
-        double total_supply;
-        double circulating_supply;
-        // Coins available for mining
-        double available_coins;
+        double total_supply;       // circulating_supply + available_coins
+        double circulating_supply; // Coins that someone holds
+        double available_coins;    // Coins available for mining
 
     public:
         Coin(double initial_price, double total_supply, double circulating_supply);

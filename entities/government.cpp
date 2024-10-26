@@ -1,6 +1,6 @@
 #include "government.h"
 
-Government::Government(double init_taxes, Exchange** exchanges)
+Government::Government(double init_taxes, unordered_set<Exchange*> exchanges)
     : init_taxes(init_taxes),
       exchanges(exchanges)
 {

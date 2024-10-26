@@ -1,6 +1,7 @@
 #ifndef CRYPTO_EXCHANGE_H
 #define CRYPTO_EXCHANGE_H
 
+#include "includes.h"
 #include "crypto_coin.h"
 #include "base_investor.h"
 
@@ -17,11 +18,11 @@ class Exchange : public Facility {
         double sold_coins;
         double stacked_coins;
         double gov_taxes;
-        Investor** customers;
+        unordered_set<Investor*> customers;
         Coin* coin;
 
     public:
-        Exchange(double fee, double init_coins, double gov_taxes, Investor** customers, Coin* coin);
+        Exchange(double fee, double init_coins, double gov_taxes, unordered_set<Investor*> customers, Coin* coin);
         ~Exchange();
 
         double ExecuteTransaction(double amount, Investor* buyer, TransactionType type);

@@ -1,6 +1,6 @@
 #include "tech_devs.h"
 
-TechDeveloper::TechDeveloper(double efficiency_boost, CryptoMiner** miners)
+TechDeveloper::TechDeveloper(double efficiency_boost, unordered_set<CryptoMiner*> miners)
     : efficiency_boost(efficiency_boost),
       miners(miners)
 {

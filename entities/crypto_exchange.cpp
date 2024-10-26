@@ -1,6 +1,6 @@
 #include "crypto_exchange.h"
 
-Exchange::Exchange(double fee, double init_coins, double gov_taxes, Investor** customers, Coin* coin)
+Exchange::Exchange(double fee, double init_coins, double gov_taxes, unordered_set<Investor*> customers, Coin* coin)
     : Facility(),
       transaction_fee(fee),
       initial_coins(init_coins),
@@ -29,6 +29,9 @@ double Exchange::ExecuteTransaction(double amount, Investor* buyer, TransactionT
 void Exchange::ClosingExchange() {
     // Reaction to when government closes this exchange, send all current customers info
     coin->DecreaseSupply(this->stacked_coins);
+
+    for(auto customer : this->customers)
+        customer->ExchangeClosedReaction();
 }
 
 double Exchange::getInterestRate() {

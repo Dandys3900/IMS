@@ -1,34 +1,6 @@
-#include "entities/includes.h"
-#include "json_parser/json.hpp"
-
-/***** SIMULATION ENTITIES *****/
-#include "entities/crypto_coin.h"
-#include "entities/base_investor.h"
-#include "entities/longterm_investor.h"
-#include "entities/shortterm_investor.h"
-#include "entities/crypto_miner.h"
-#include "entities/government.h"
-#include "entities/crypto_exchange.h"
-#include "entities/elon_tweet.h"
-#include "entities/tech_devs.h"
-
-using json = nlohmann::json;
-
-template <typename T>
-void freeSet(std::unordered_set<T*>& set) {
-    // Properly free set pointers
-    for (T* ptr : set) {
-        delete ptr;
-    }
-    // Clear set itself
-    set.clear();
-}
+#include "entities/config_handler.h"
 
 int main (int argc, char *argv[]) {
-    // Load simulation config from JSON file
-    std::ifstream config_file("sim_config.json");
-    json sim_config = json::parse(config_file);
-
     // Simulate for 1 year
     Init(0, 365);
 

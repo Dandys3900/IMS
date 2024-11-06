@@ -1,6 +1,3 @@
-# Author: Tomas Daniel
-# Login:  xdanie14
-
 CXX := g++
 CXXFLAGS := -std=c++20 -Wall -Wextra
 SRCS := $(wildcard *.cpp) $(wildcard entities/*.cpp)

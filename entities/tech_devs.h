@@ -2,7 +2,8 @@
 #define TECH_DEVELOPER_H
 
 #include "includes.h"
-#include "crypto_miner.h"
+
+class CryptoMiner;
 
 class TechDeveloper : public Process {
     private:

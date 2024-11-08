@@ -1,3 +1,4 @@
+#include "crypto_miner.h"
 #include "tech_devs.h"
 
 TechDeveloper::TechDeveloper(double efficiency_boost, unordered_set<CryptoMiner*> miners)

@@ -1,7 +1,8 @@
+#include "crypto_coin.h"
 #include "longterm_investor.h"
 
-LongTermInvestor::LongTermInvestor(double initial_balance, Coin* coin)
-    : Investor(initial_balance, coin)
+LongTermInvestor::LongTermInvestor(CoinsStats initial_balance, unordered_set<Coin*> coins)
+    : Investor(initial_balance, coins)
 {
 }
 
@@ -14,11 +15,11 @@ void LongTermInvestor::Behavior() {
     // Amount of new coins is affected by exchange fees
 }
 
-void LongTermInvestor::BuyCoins(double amount) {
+void LongTermInvestor::BuyCoins(double amount, Coin* coin) {
     // Buy coins from randomly selected exchange
 }
 
-void LongTermInvestor::SellCoins(double amount) {
+void LongTermInvestor::SellCoins(double amount, Coin* coin) {
     // By his intern logic, perform selling of coins
 }
 

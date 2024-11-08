@@ -1,3 +1,4 @@
+#include "crypto_coin.h"
 #include "elon_tweet.h"
 
 ElonTweet::ElonTweet(Coin* coin)

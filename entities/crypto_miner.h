@@ -2,22 +2,25 @@
 #define CRYPTO_MINER_H
 
 #include "includes.h"
-#include "crypto_coin.h"
+
+class Coin;
 
 class CryptoMiner : public Process {
     private:
-        double coins_mined;
+        CoinsStats coins_mined;
+        CoinsStats profits; // Profit for each type of mined coin
         double mining_rate;
         double initial_effeciency;
-        Coin* coin;
+        unordered_set<Coin*> coins;
 
     public:
-        CryptoMiner(double initial_rate, double initial_effeciency, Coin* coin);
+        CryptoMiner(double initial_rate, double initial_effeciency, unordered_set<Coin*> coins);
         ~CryptoMiner();
 
         void Behavior() override;
         void SetMiningEfficiency(double new_value);
-        double GetTotalMinedCoins();
+        CoinsStats GetTotalMinedCoins();
+        void printStats();
 };
 
 #endif // CRYPTO_MINER_H

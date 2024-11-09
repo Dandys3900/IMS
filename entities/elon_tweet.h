@@ -2,7 +2,8 @@
 #define ELONTWEET_H
 
 #include "includes.h"
-#include "crypto_coin.h"
+
+class Coin;
 
 class ElonTweet : public Event {
     private:

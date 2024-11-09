@@ -2,7 +2,8 @@
 #define GOVERNMENT_H
 
 #include "includes.h"
-#include "crypto_exchange.h"
+
+class Exchange;
 
 class Government : public Event {
     private:
@@ -15,6 +16,7 @@ class Government : public Event {
 
         void Behavior() override;
         void UpdateTaxes(double new_value);
+        void printStats();
 };
 
 #endif // GOVERNMENT_H

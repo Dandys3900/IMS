@@ -16,9 +16,15 @@
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
+#include <exception>
+#include <map>
 
 using namespace std;
 
 /***** OTHERS *****/
+#include "time.h"
+#include "custom_exception.h"
+
+using CoinsStats = map<string, double>;
 
 #endif // INCLUDEFILE_H

@@ -1,3 +1,4 @@
+#include "crypto_exchange.h"
 #include "government.h"
 
 Government::Government(double init_taxes, unordered_set<Exchange*> exchanges)
@@ -17,4 +18,11 @@ void Government::Behavior() {
 void Government::UpdateTaxes(double new_value) {
     // F.e. decide by current crypto price whether its good idea to set new taxes to all exchanges
     // Use Exchange::UpdateGovTaxes()
+}
+
+void Government::printStats() {
+    cout << "-------------------------"                    << endl;
+    cout << "Governments stats:"                           << endl;
+    cout << " -> Current crypto tax: " << this->init_taxes << endl;
+    cout << "-------------------------"                    << endl;
 }

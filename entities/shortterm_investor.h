@@ -9,12 +9,12 @@
 */
 class ShortTermInvestor : public Investor {
     public:
-        ShortTermInvestor(double initial_balance, Coin* coin);
+        ShortTermInvestor(CoinsStats initial_balance, unordered_set<Coin*> coins);
         ~ShortTermInvestor();
 
-        void Behavior()               override;
-        void BuyCoins(double amount)  override;
-        void SellCoins(double amount) override;
+        void Behavior() override;
+        void BuyCoins(double amount, Coin* coin)  override;
+        void SellCoins(double amount, Coin* coin) override;
         void ExchangeClosedReaction() override;
 };
 

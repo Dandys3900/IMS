@@ -50,20 +50,32 @@ void ConfigHandler::InitSimulation() {
             // Create set of coins trader will trade
             unordered_set<Coin*> coins;
             CoinsStats stats;
+            CoinsThresholds thresholds;
 
-            for (auto [key, value] : entity.at("initial_balance").items()) {
+            for (auto coin : entity.at("coins")) {
+                // Get coin info (name, count)
+                const auto coininfo = coin.begin();
+                // Find coin matching given coin name
                 for (auto coin : this->coins) {
-                    if (coin->getCoinName() == (string)key) {
+                    if (coin->getCoinName() == (string)coininfo.key()) {
                         coins.insert(coin);
-                        stats.insert(pair<string, double>(key, value));
+                        stats.insert({(string)coininfo.key(), (double)coininfo.value()});
                     }
                 }
+                // Add threshold for this coin (coinname, sell and buy thresholds)
+                thresholds.insert({
+                    (string)coininfo.key(), {
+                        (double)coin.at("sell_threshold"),
+                        (double)coin.at("buy_threshold")
+                    }
+                });
             }
 
             if (entity_name == "investor_longterm")
                 this->investors.insert(
                     new LongTermInvestor(
                         stats,
+                        thresholds,
                         coins
                     )
                 );
@@ -71,6 +83,7 @@ void ConfigHandler::InitSimulation() {
                 this->investors.insert(
                     new ShortTermInvestor(
                         stats,
+                        thresholds,
                         coins
                     )
                 );
@@ -84,7 +97,7 @@ void ConfigHandler::InitSimulation() {
                 for (auto coin : this->coins) {
                     if (coin->getCoinName() == (string)key) {
                         coins.insert(coin);
-                        stats.insert(pair<string, double>(key, value));
+                        stats.insert({(string)key, (double)value});
                     }
                 }
             }

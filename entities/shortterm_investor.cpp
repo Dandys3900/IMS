@@ -1,8 +1,8 @@
 #include "crypto_coin.h"
 #include "shortterm_investor.h"
 
-ShortTermInvestor::ShortTermInvestor(CoinsStats initial_balance, unordered_set<Coin*> coins)
-    : Investor(initial_balance, coins)
+ShortTermInvestor::ShortTermInvestor(CoinsStats initial_balance, CoinsThresholds thresholds, unordered_set<Coin*> coins)
+    : Investor(initial_balance, thresholds, coins)
 {
 }
 
@@ -13,6 +13,7 @@ ShortTermInvestor::~ShortTermInvestor() {
 void ShortTermInvestor::Behavior() {
     // Randomly buys random amount of new coins from exchange
     // Amount of new coins is affected by exchange fees
+    // For buy and sell behaviour use given values in CoinsThresholds thresholds
 }
 
 void ShortTermInvestor::BuyCoins(double amount, Coin* coin) {

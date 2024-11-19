@@ -9,7 +9,7 @@
 */
 class LongTermInvestor : public Investor {
     public:
-        LongTermInvestor(CoinsStats initial_balance, unordered_set<Coin*> coins);
+        LongTermInvestor(CoinsStats initial_balance, CoinsThresholds thresholds, unordered_set<Coin*> coins);
         ~LongTermInvestor();
 
         void Behavior() override;

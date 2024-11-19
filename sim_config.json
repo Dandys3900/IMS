@@ -12,17 +12,21 @@
     },
     {
         "type" : "investor_longterm",
-        "initial_balance" : [
+        "coins" : [
             {
-                "coin1" : 100
+                "coin1" : 100,
+                "sell_threshold" : 50,
+                "buy_threshold" : 25
             }
         ]
     },
     {
         "type" : "investor_shortterm",
-        "initial_balance" : [
+        "coins" : [
             {
-                "coin1" : 200
+                "coin1" : 200,
+                "sell_threshold" : 70,
+                "buy_threshold" : 55
             }
         ]
     },

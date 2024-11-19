@@ -11,11 +11,13 @@ class Coin;
 class Investor : public Process {
     protected:
         CoinsStats balance;
+        CoinsThresholds thresholds;
         unordered_set<Coin*> coins;
 
     public:
-        Investor(CoinsStats initial_balance, unordered_set<Coin*> coins)
+        Investor(CoinsStats initial_balance, CoinsThresholds thresholds, unordered_set<Coin*> coins)
             : balance(initial_balance),
+              thresholds(thresholds),
               coins(coins)
         {
         }
@@ -35,6 +37,8 @@ class Investor : public Process {
             for (auto coin : this->coins) {
                 string coinname = coin->getCoinName();
                 cout << "Name: " << coinname << " final balance: " << this->balance.at(coinname) << endl;
+                cout << "Sell threshold: " << this->thresholds.at(coinname).first << endl;
+                cout << "Buy threshold: " << this->thresholds.at(coinname).second << endl;
             }
             cout << "-------------------------" << endl;
         }

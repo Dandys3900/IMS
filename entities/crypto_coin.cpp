@@ -1,9 +1,10 @@
 #include "crypto_exchange.h"
 #include "crypto_coin.h"
 
-Coin::Coin(const string coin_name, double initial_price, double total_supply, double circulating_supply)
+Coin::Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply)
     : coin_name(coin_name),
       price(initial_price),
+      mining_efficiency(mining_efficiency),
       total_supply(total_supply),
       circulating_supply(circulating_supply),
       available_coins(total_supply - circulating_supply),
@@ -50,29 +51,34 @@ double Coin::MineCoins(double amount) {
     return current_amount;
 }
 
-const string Coin::getCoinName() {
+const string Coin::GetCoinName() {
     return this->coin_name;
 }
 
-double Coin::getCurrentPrice() {
+double Coin::GetCurrentPrice() {
     return this->price;
 }
 
-void Coin::addTradingExchange(Exchange* exchange) {
+double Coin::GetMiningEfficiency() {
+    return this->mining_efficiency;
+}
+
+void Coin::AddTradingExchange(Exchange* exchange) {
     // Add new exchange trading this coin
     this->trading_exchanges.insert(exchange);
 }
 
-unordered_set<Exchange*> Coin::getTradingExchanges() {
+unordered_set<Exchange*> Coin::GetTradingExchanges() {
     return this->trading_exchanges;
 }
 
-void Coin::printStats() {
+void Coin::PrintStats() {
     cout << "-------------------------"           << endl;
     cout << "Coin stats:"                         << endl;
-    cout << " -> Name: "                          << this->getCoinName() << endl;
-    cout << " -> Current price: "                 << this->getCurrentPrice() << endl;
-    cout << " -> Count of exchanges"              << this->getTradingExchanges().size() << endl;
+    cout << " -> Name: "                          << this->GetCoinName() << endl;
+    cout << " -> Current price: "                 << this->GetCurrentPrice() << endl;
+    cout << " -> Mining efficiency: "             << this->GetMiningEfficiency() << endl;
+    cout << " -> Count of exchanges"              << this->GetTradingExchanges().size() << endl;
     cout << " -> Total supply of coins: "         << this->total_supply << endl;
     cout << " -> Coins available for mining: "    << this->available_coins << endl;
     cout << " -> Coins in market (circulating): " << this->circulating_supply << endl;

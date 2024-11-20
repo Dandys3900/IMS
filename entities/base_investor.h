@@ -30,12 +30,12 @@ class Investor : public Process {
         virtual void SellCoins(double amount, Coin* coin) = 0;
         virtual void ExchangeClosedReaction() = 0;
 
-        void printStats() {
+        void PrintStats() {
             cout << "-------------------------" << endl;
             cout << "Investor stats:"           << endl;
             cout << " -> Traided coins: "       << endl;
             for (auto coin : this->coins) {
-                string coinname = coin->getCoinName();
+                string coinname = coin->GetCoinName();
                 cout << "Name: " << coinname << " final balance: " << this->balance.at(coinname) << endl;
                 cout << "Sell threshold: " << this->thresholds.at(coinname).first << endl;
                 cout << "Buy threshold: " << this->thresholds.at(coinname).second << endl;

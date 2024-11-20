@@ -20,7 +20,11 @@ void Government::UpdateTaxes(double new_value) {
     // Use Exchange::UpdateGovTaxes()
 }
 
-void Government::printStats() {
+double Government::GetCurrentTaxes() {
+    return this->init_taxes;
+}
+
+void Government::PrintStats() {
     cout << "-------------------------"                    << endl;
     cout << "Governments stats:"                           << endl;
     cout << " -> Current crypto tax: " << this->init_taxes << endl;

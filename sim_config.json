@@ -7,6 +7,7 @@
         "type" : "coin",
         "name" : "coin1",
         "initial_price" : 10,
+        "mining_efficiency" : 0.7,
         "total_supply" : 1000000,
         "circulating_supply" : 10000
     },
@@ -33,7 +34,6 @@
     {
         "type" : "exchange",
         "fee" : 0.2,
-        "gov_taxes" : 0.05,
         "initial_coin_amount" : [
             {
                 "coin1" : 10000
@@ -43,7 +43,6 @@
     {
         "type" : "exchange",
         "fee" : 0.15,
-        "gov_taxes" : 0.05,
         "initial_coin_amount" : [
             {
                 "coin1" : 50000
@@ -57,18 +56,20 @@
     {
         "type" : "miner",
         "intial_mining_rate_per_hour" : 5,
-        "initial_effeciency" : 0.4,
+        "hardware_efficiency" : 0.5,
         "coins" : [
             "coin1"
-        ]
+        ],
+        "mining_strategy" : "random_choice"
     },
     {
         "type" : "miner",
         "intial_mining_rate_per_hour" : 8,
-        "initial_effeciency" : 0.25,
+        "hardware_efficiency" : 0.45,
         "coins" : [
             "coin1"
-        ]
+        ],
+        "mining_strategy" : "best_choice"
     },
     {
         "type" : "elon_tweeter"

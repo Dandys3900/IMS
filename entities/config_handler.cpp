@@ -41,6 +41,7 @@ void ConfigHandler::InitSimulation() {
                 new Coin(
                     (string)entity.at("name"),
                     (double)entity.at("initial_price"),
+                    (double)entity.at("mining_efficiency"),
                     (double)entity.at("total_supply"),
                     (double)entity.at("circulating_supply")
                 )
@@ -57,7 +58,7 @@ void ConfigHandler::InitSimulation() {
                 const auto coininfo = coin.begin();
                 // Find coin matching given coin name
                 for (auto coin : this->coins) {
-                    if (coin->getCoinName() == (string)coininfo.key()) {
+                    if (coin->GetCoinName() == (string)coininfo.key()) {
                         coins.insert(coin);
                         stats.insert({(string)coininfo.key(), (double)coininfo.value()});
                     }
@@ -95,7 +96,7 @@ void ConfigHandler::InitSimulation() {
 
             for (auto [key, value] : entity.at("initial_coin_amount").items()) {
                 for (auto coin : this->coins) {
-                    if (coin->getCoinName() == (string)key) {
+                    if (coin->GetCoinName() == (string)key) {
                         coins.insert(coin);
                         stats.insert({(string)key, (double)value});
                     }
@@ -106,7 +107,6 @@ void ConfigHandler::InitSimulation() {
                 new Exchange(
                     (double)entity.at("fee"),
                     stats,
-                    (double)entity.at("gov_taxes"),
                     this->investors,
                     coins
                 )
@@ -117,6 +117,9 @@ void ConfigHandler::InitSimulation() {
                 (double)entity.at("init_taxes"),
                 this->exchanges
             );
+            // Populate government taxes for all exchanges
+            for (auto exchange : this->exchanges)
+                exchange->UpdateGovTaxes(this->government->GetCurrentTaxes());
         }
         else if (entity_name == "miner") {
             // Create set of coins miner will mine
@@ -124,7 +127,7 @@ void ConfigHandler::InitSimulation() {
 
             for (auto targetcoin : entity.at("coins")) {
                 for (auto coin : this->coins) {
-                    if (coin->getCoinName() == (string)targetcoin)
+                    if (coin->GetCoinName() == (string)targetcoin)
                         coins.insert(coin);
                 }
             }
@@ -132,8 +135,9 @@ void ConfigHandler::InitSimulation() {
             this->miners.insert(
                 new CryptoMiner(
                     (double)entity.at("intial_mining_rate_per_hour"),
-                    (double)entity.at("initial_effeciency"),
-                    coins
+                    (double)entity.at("hardware_efficiency"),
+                    coins,
+                    (string)entity.at("mining_strategy")
                 )
             );
         }

@@ -16,7 +16,8 @@ class Government : public Event {
 
         void Behavior() override;
         void UpdateTaxes(double new_value);
-        void printStats();
+        double GetCurrentTaxes();
+        void PrintStats();
 };
 
 #endif // GOVERNMENT_H

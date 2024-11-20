@@ -8,19 +8,20 @@ class Coin;
 class CryptoMiner : public Process {
     private:
         CoinsStats coins_mined;
-        CoinsStats profits; // Profit for each type of mined coin
+        CoinsStats profits; // Profit for each type of mined coins
         double mining_rate;
-        double initial_effeciency;
+        double hardware_efficiency; // Efficiency of hardware used by miner to mine
         unordered_set<Coin*> coins;
+        const string mining_strategy; // Each day select which coin to mine by this strategy
 
     public:
-        CryptoMiner(double initial_rate, double initial_effeciency, unordered_set<Coin*> coins);
+        CryptoMiner(double initial_rate, double hardware_efficiency, unordered_set<Coin*> coins, const string mining_strategy);
         ~CryptoMiner();
 
         void Behavior() override;
         void SetMiningEfficiency(double new_value);
         CoinsStats GetTotalMinedCoins();
-        void printStats();
+        void PrintStats();
 };
 
 #endif // CRYPTO_MINER_H

@@ -2,7 +2,7 @@
 #include "base_investor.h"
 #include "crypto_exchange.h"
 
-Exchange::Exchange(double fee, CoinsStats init_coins, unordered_set<Investor*> customers, unordered_set<Coin*> coins)
+Exchange::Exchange(double fee, CoinsStats init_coins, vector<Investor*> customers, vector<Coin*> coins)
     : Facility(),
       transaction_fee(fee),
       initial_coins(init_coins),

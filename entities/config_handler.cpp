@@ -37,7 +37,7 @@ void ConfigHandler::InitSimulation() {
             Init(0, (double)entity.at("sim_duration_years") * YEAR);
         }
         else if (entity_name == "coin") {
-            this->coins.insert(
+            this->coins.push_back(
                 new Coin(
                     (string)entity.at("name"),
                     (double)entity.at("initial_price"),
@@ -49,7 +49,7 @@ void ConfigHandler::InitSimulation() {
         }
         else if (entity_name == "investor_longterm" || entity_name == "investor_shortterm") {
             // Create set of coins trader will trade
-            unordered_set<Coin*> coins;
+            vector<Coin*> coins;
             CoinsStats stats;
             CoinsThresholds thresholds;
 
@@ -59,7 +59,7 @@ void ConfigHandler::InitSimulation() {
                 // Find coin matching given coin name
                 for (auto coin : this->coins) {
                     if (coin->GetCoinName() == (string)coininfo.key()) {
-                        coins.insert(coin);
+                        coins.push_back(coin);
                         stats.insert({(string)coininfo.key(), (double)coininfo.value()});
                     }
                 }
@@ -73,7 +73,7 @@ void ConfigHandler::InitSimulation() {
             }
 
             if (entity_name == "investor_longterm")
-                this->investors.insert(
+                this->investors.push_back(
                     new LongTermInvestor(
                         stats,
                         thresholds,
@@ -81,7 +81,7 @@ void ConfigHandler::InitSimulation() {
                     )
                 );
             else // investor_shortterm
-                this->investors.insert(
+                this->investors.push_back(
                     new ShortTermInvestor(
                         stats,
                         thresholds,
@@ -91,19 +91,19 @@ void ConfigHandler::InitSimulation() {
         }
         else if (entity_name == "exchange") {
             // Create set of coins exchange will trade
-            unordered_set<Coin*> coins;
+            vector<Coin*> coins;
             CoinsStats stats;
 
             for (auto [key, value] : entity.at("initial_coin_amount").items()) {
                 for (auto coin : this->coins) {
                     if (coin->GetCoinName() == (string)key) {
-                        coins.insert(coin);
+                        coins.push_back(coin);
                         stats.insert({(string)key, (double)value});
                     }
                 }
             }
 
-            this->exchanges.insert(
+            this->exchanges.push_back(
                 new Exchange(
                     (double)entity.at("fee"),
                     stats,
@@ -123,16 +123,16 @@ void ConfigHandler::InitSimulation() {
         }
         else if (entity_name == "miner") {
             // Create set of coins miner will mine
-            unordered_set<Coin*> coins;
+            vector<Coin*> coins;
 
             for (auto targetcoin : entity.at("coins")) {
                 for (auto coin : this->coins) {
                     if (coin->GetCoinName() == (string)targetcoin)
-                        coins.insert(coin);
+                        coins.push_back(coin);
                 }
             }
 
-            this->miners.insert(
+            this->miners.push_back(
                 new CryptoMiner(
                     (double)entity.at("intial_mining_rate_per_hour"),
                     (double)entity.at("hardware_efficiency"),
@@ -142,7 +142,7 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else if (entity_name == "elon_tweeter") {
-            this->elons.insert(
+            this->elons.push_back(
                 new ElonTweet(
                     // Use first coin by default, TODO: Change this
                     *(this->coins.begin())
@@ -150,7 +150,7 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else if (entity_name == "tech_dev") {
-            this->tech_devs.insert(
+            this->tech_devs.push_back(
                 new TechDeveloper(
                     (double)entity.at("mining_efficiency_boost"),
                     this->miners
@@ -163,7 +163,7 @@ void ConfigHandler::InitSimulation() {
 }
 
 template <typename T>
-void ConfigHandler::freeSet(std::unordered_set<T*>& set) {
+void ConfigHandler::freeSet(std::vector<T*>& set) {
     // Properly free set pointers
     for (T* ptr : set)
         delete ptr;

@@ -13,7 +13,7 @@ class Coin {
         double total_supply;       // circulating_supply + available_coins
         double circulating_supply; // Coins that someone holds
         double available_coins;    // Coins available for mining
-        unordered_set<Exchange*> trading_exchanges; // List of exchanges trading this coin
+        vector<Exchange*> trading_exchanges; // List of exchanges trading this coin
 
     public:
         Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply);
@@ -29,7 +29,7 @@ class Coin {
         double GetCurrentPrice();
         double GetMiningEfficiency();
         void AddTradingExchange(Exchange* exchange);
-        unordered_set<Exchange*> GetTradingExchanges();
+        vector<Exchange*> GetTradingExchanges();
         void PrintStats();
 };
 

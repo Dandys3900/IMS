@@ -12,10 +12,10 @@ class Investor : public Process {
     protected:
         CoinsStats balance;
         CoinsThresholds thresholds;
-        unordered_set<Coin*> coins;
+        vector<Coin*> coins;
 
     public:
-        Investor(CoinsStats initial_balance, CoinsThresholds thresholds, unordered_set<Coin*> coins)
+        Investor(CoinsStats initial_balance, CoinsThresholds thresholds, vector<Coin*> coins)
             : balance(initial_balance),
               thresholds(thresholds),
               coins(coins)

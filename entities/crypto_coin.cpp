@@ -65,10 +65,10 @@ double Coin::GetMiningEfficiency() {
 
 void Coin::AddTradingExchange(Exchange* exchange) {
     // Add new exchange trading this coin
-    this->trading_exchanges.insert(exchange);
+    this->trading_exchanges.push_back(exchange);
 }
 
-unordered_set<Exchange*> Coin::GetTradingExchanges() {
+vector<Exchange*> Coin::GetTradingExchanges() {
     return this->trading_exchanges;
 }
 

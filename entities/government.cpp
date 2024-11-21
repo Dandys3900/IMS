@@ -1,7 +1,7 @@
 #include "crypto_exchange.h"
 #include "government.h"
 
-Government::Government(double init_taxes, unordered_set<Exchange*> exchanges)
+Government::Government(double init_taxes, vector<Exchange*> exchanges)
     : init_taxes(init_taxes),
       exchanges(exchanges)
 {

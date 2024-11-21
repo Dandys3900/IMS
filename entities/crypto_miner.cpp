@@ -1,7 +1,7 @@
 #include "crypto_coin.h"
 #include "crypto_miner.h"
 
-CryptoMiner::CryptoMiner(double initial_rate, double hardware_efficiency, unordered_set<Coin*> coins, const string mining_strategy)
+CryptoMiner::CryptoMiner(double initial_rate, double hardware_efficiency, vector<Coin*> coins, const string mining_strategy)
     : coins_mined(),
       profits(),
       mining_rate(initial_rate),
@@ -34,7 +34,7 @@ void CryptoMiner::Behavior() {
 }
 
 void CryptoMiner::SetMiningEfficiency(double new_value) {
-    this->hardware_efficiency = new_value;
+    this->hardware_efficiency += new_value;
 }
 
 CoinsStats CryptoMiner::GetTotalMinedCoins() {

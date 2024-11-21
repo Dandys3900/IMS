@@ -1,7 +1,7 @@
 #include "crypto_coin.h"
 #include "shortterm_investor.h"
 
-ShortTermInvestor::ShortTermInvestor(CoinsStats initial_balance, CoinsThresholds thresholds, unordered_set<Coin*> coins)
+ShortTermInvestor::ShortTermInvestor(CoinsStats initial_balance, CoinsThresholds thresholds, vector<Coin*> coins)
     : Investor(initial_balance, thresholds, coins)
 {
 }

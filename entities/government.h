@@ -8,10 +8,10 @@ class Exchange;
 class Government : public Event {
     private:
         double init_taxes;
-        unordered_set<Exchange*> exchanges;
+        vector<Exchange*> exchanges;
 
     public:
-        Government(double init_taxes, unordered_set<Exchange*> exchanges);
+        Government(double init_taxes, vector<Exchange*> exchanges);
         ~Government();
 
         void Behavior() override;

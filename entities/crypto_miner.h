@@ -11,11 +11,11 @@ class CryptoMiner : public Process {
         CoinsStats profits; // Profit for each type of mined coins
         double mining_rate;
         double hardware_efficiency; // Efficiency of hardware used by miner to mine
-        unordered_set<Coin*> coins;
+        vector<Coin*> coins;
         const string mining_strategy; // Each day select which coin to mine by this strategy
 
     public:
-        CryptoMiner(double initial_rate, double hardware_efficiency, unordered_set<Coin*> coins, const string mining_strategy);
+        CryptoMiner(double initial_rate, double hardware_efficiency, vector<Coin*> coins, const string mining_strategy);
         ~CryptoMiner();
 
         void Behavior() override;

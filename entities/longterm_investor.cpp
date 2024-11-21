@@ -1,7 +1,7 @@
 #include "crypto_coin.h"
 #include "longterm_investor.h"
 
-LongTermInvestor::LongTermInvestor(CoinsStats initial_balance, CoinsThresholds thresholds, unordered_set<Coin*> coins)
+LongTermInvestor::LongTermInvestor(CoinsStats initial_balance, CoinsThresholds thresholds, vector<Coin*> coins)
     : Investor(initial_balance, thresholds, coins)
 {
 }

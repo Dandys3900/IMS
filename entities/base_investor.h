@@ -13,13 +13,18 @@ class Investor : public Process {
         CoinsStats balance;
         CoinsThresholds thresholds;
         vector<Coin*> coins;
+        double sentiment;
 
     public:
         Investor(CoinsStats initial_balance, CoinsThresholds thresholds, vector<Coin*> coins)
             : balance(initial_balance),
               thresholds(thresholds),
-              coins(coins)
+              coins(coins),
+              sentiment(0.0)
         {
+            // Link investor with coins
+            for (auto coin : this->coins)
+                coin->AddTrader(this);
         }
 
         virtual ~Investor()
@@ -28,7 +33,22 @@ class Investor : public Process {
 
         virtual void BuyCoins(double amount, Coin* coin)  = 0;
         virtual void SellCoins(double amount, Coin* coin) = 0;
-        virtual void ExchangeClosedReaction() = 0;
+
+        void PositiveNewsReaction() {
+            // Results in higher investor sentiment value affected by good news
+            // Randomly select how affected this investor is
+            this->sentiment = Uniform(0.0, 1.0);
+        }
+
+        void NegativeNewsReaction() {
+            // Results in lowering investor sentiment value affected by bad news
+            // Randomly select how affected this investor is
+            this->sentiment = Uniform(-1.0, 0.0);
+        }
+
+        double GetInvestorSentiment() {
+            return this->sentiment;
+        }
 
         void PrintStats() {
             cout << "-------------------------" << endl;

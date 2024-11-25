@@ -20,7 +20,7 @@ void TechDeveloper::Behavior() {
             this->efficiency_boost
         );
 
-        // Repeat every 6 months
-        Wait(HALF_YEAR);
+        // Repeat every 1-2 years
+        Wait(Uniform(YEAR, 2 * YEAR));
     }
 }

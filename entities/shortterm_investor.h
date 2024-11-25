@@ -15,7 +15,6 @@ class ShortTermInvestor : public Investor {
         void Behavior() override;
         void BuyCoins(double amount, Coin* coin)  override;
         void SellCoins(double amount, Coin* coin) override;
-        void ExchangeClosedReaction() override;
 };
 
 #endif // SHORTTERM_INVESTOR_H

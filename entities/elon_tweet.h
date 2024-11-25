@@ -5,7 +5,7 @@
 
 class Coin;
 
-class ElonTweet : public Event {
+class ElonTweet : public Process {
     private:
         Coin* coin;
 

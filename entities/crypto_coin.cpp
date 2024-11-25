@@ -1,4 +1,4 @@
-#include "crypto_exchange.h"
+#include "base_investor.h"
 #include "crypto_coin.h"
 
 Coin::Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply)
@@ -8,7 +8,7 @@ Coin::Coin(const string coin_name, double initial_price, double mining_efficienc
       total_supply(total_supply),
       circulating_supply(circulating_supply),
       available_coins(total_supply - circulating_supply),
-      trading_exchanges()
+      traders()
 {
 }
 
@@ -24,16 +24,35 @@ void Coin::DecreaseSupply(double amount) {
     this->circulating_supply -= amount;
 }
 
-void Coin::IncreasePrice(double factor) {
+void Coin::ChangePrice(double factor) {
     // Method called by Elon tweet to suddenly change coin price
-}
+    this->price += (this->price * factor);
 
-void Coin::DecreasePrice(double factor) {
-    // Method called by Elon tweet to suddenly change coin price
+    if (factor > 0.0) {
+        // Distribute this positive news to coin's traders
+        for (auto trader : this->traders)
+            trader->PositiveNewsReaction();
+    }
+    else {
+        // Distribute this negative news to coin's traders
+        for (auto trader : this->traders)
+            trader->NegativeNewsReaction();
+    }
 }
 
 void Coin::UpdatePrice() {
     // Internal logic to calculate new price of coin
+    // Demand by market
+    double demand = (this->circulating_supply / this->total_supply);
+
+    // Calculate average sentiment among traders
+    double sentiment_sum = 0.0;
+    for (auto trader : this->traders)
+        sentiment_sum += trader->GetInvestorSentiment();
+    double avg_sentiment = (sentiment_sum / this->traders.size());
+
+    // Update price
+    this->price *= (demand + avg_sentiment);
 }
 
 double Coin::MineCoins(double amount) {
@@ -43,6 +62,7 @@ double Coin::MineCoins(double amount) {
         this->IncreaseSupply(amount);
         return amount;
     }
+
     // We don't have enough, return what we have
     double current_amount = this->available_coins;
     this->available_coins = 0.0;
@@ -63,13 +83,13 @@ double Coin::GetMiningEfficiency() {
     return this->mining_efficiency;
 }
 
-void Coin::AddTradingExchange(Exchange* exchange) {
+void Coin::AddTrader(Investor* exchange) {
     // Add new exchange trading this coin
-    this->trading_exchanges.push_back(exchange);
+    this->traders.push_back(exchange);
 }
 
-vector<Exchange*> Coin::GetTradingExchanges() {
-    return this->trading_exchanges;
+vector<Investor*> Coin::GetTraders() {
+    return this->traders;
 }
 
 void Coin::PrintStats() {
@@ -78,7 +98,7 @@ void Coin::PrintStats() {
     cout << " -> Name: "                          << this->GetCoinName() << endl;
     cout << " -> Current price: "                 << this->GetCurrentPrice() << endl;
     cout << " -> Mining efficiency: "             << this->GetMiningEfficiency() << endl;
-    cout << " -> Count of exchanges"              << this->GetTradingExchanges().size() << endl;
+    cout << " -> Count of traders:"               << this->GetTraders().size() << endl;
     cout << " -> Total supply of coins: "         << this->total_supply << endl;
     cout << " -> Coins available for mining: "    << this->available_coins << endl;
     cout << " -> Coins in market (circulating): " << this->circulating_supply << endl;

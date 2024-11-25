@@ -15,7 +15,6 @@ class LongTermInvestor : public Investor {
         void Behavior() override;
         void BuyCoins(double amount, Coin* coin)  override;
         void SellCoins(double amount, Coin* coin) override;
-        void ExchangeClosedReaction() override;
 };
 
 #endif // LONGTERM_INVESTOR_H

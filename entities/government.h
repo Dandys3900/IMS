@@ -5,7 +5,7 @@
 
 class Exchange;
 
-class Government : public Event {
+class Government : public Process {
     private:
         double init_taxes;
         vector<Exchange*> exchanges;

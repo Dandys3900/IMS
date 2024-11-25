@@ -13,9 +13,6 @@ Exchange::Exchange(double fee, CoinsStats init_coins, vector<Investor*> customer
       coins(coins),
       closed_by_gov(false)
 {
-    // Iterate over all given coins and add this exchange to their list
-    for (auto coin : this->coins)
-        coin->AddTradingExchange(this);
 }
 
 Exchange::~Exchange() {
@@ -23,6 +20,9 @@ Exchange::~Exchange() {
 }
 
 double Exchange::ExecuteTransaction(double amount, Investor* buyer, Coin* coin, TransactionType type) {
+    if (this->closed_by_gov)
+        return;
+
     // Get current amount of requested coin
     double& coin_amount = this->stacked_coins.at(coin->GetCoinName());
 
@@ -53,7 +53,7 @@ void Exchange::ClosingExchange() {
 
     // Reaction to when government closes this exchange, send all current customers info
     for(auto customer : this->customers)
-        customer->ExchangeClosedReaction();
+        customer->NegativeNewsReaction();
 }
 
 double Exchange::GetInterestRate() {

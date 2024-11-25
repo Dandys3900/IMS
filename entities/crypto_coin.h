@@ -3,7 +3,7 @@
 
 #include "includes.h"
 
-class Exchange;
+class Investor;
 
 class Coin {
     private:

@@ -21,7 +21,7 @@ Exchange::~Exchange() {
 
 double Exchange::ExecuteTransaction(double amount, Investor* buyer, Coin* coin, TransactionType type) {
     if (this->closed_by_gov)
-        return;
+        return 0.0;
 
     // Get current amount of requested coin
     double& coin_amount = this->stacked_coins.at(coin->GetCoinName());

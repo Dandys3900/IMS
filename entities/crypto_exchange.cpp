@@ -13,6 +13,9 @@ Exchange::Exchange(double fee, CoinsStats init_coins, vector<Investor*> customer
       coins(coins),
       closed_by_gov(false)
 {
+    // Register this exchange to all coins it trades
+    for (auto coin : this->coins)
+        coin->AddExchange(this);
 }
 
 Exchange::~Exchange() {
@@ -35,6 +38,9 @@ double Exchange::ExecuteTransaction(double amount, Investor* buyer, Coin* coin, 
         coin->IncreaseSupply(amount);
         // Update exchange current amount of this coin
         coin_amount -= amount;
+
+        // Update total amount of sold coins
+        this->sold_coins +- amount;
     }
     else { // type == SELL
         coin->DecreaseSupply(amount);
@@ -56,9 +62,12 @@ void Exchange::ClosingExchange() {
         customer->NegativeNewsReaction();
 }
 
-double Exchange::GetInterestRate() {
-    // Calculate current value of interest in coins:
-    // interest = (stacked_coins / initial_coins)
+double Exchange::GetInterestRate(const string coin_name) {
+    // Calculate current value of interest for given coin
+    double stacked_coins = this->stacked_coins.at(coin_name);
+    double initial_amount = this->initial_coins.at(coin_name);
+
+    return (stacked_coins / initial_amount);
 }
 
 void Exchange::UpdateGovTaxes(double new_value) {

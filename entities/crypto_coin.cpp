@@ -1,4 +1,5 @@
 #include "base_investor.h"
+#include "crypto_exchange.h"
 #include "crypto_coin.h"
 
 Coin::Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply)
@@ -45,11 +46,20 @@ void Coin::UpdatePrice() {
     // Demand by market
     double demand = (this->circulating_supply / this->total_supply);
 
+    // Calculate average demand from each exchange trading this coin
+    double avg_exch_demand = 0.0;
+    for (auto exchange : this->exchanges)
+        avg_exch_demand += exchange->GetInterestRate(this->coin_name);
+    avg_exch_demand = (avg_exch_demand / this->exchanges.size());
+
+    // Create total average demand
+    demand = ((demand + avg_exch_demand) / 2);
+
     // Calculate average sentiment among traders
-    double sentiment_sum = 0.0;
+    double avg_sentiment = 0.0;
     for (auto trader : this->traders)
-        sentiment_sum += trader->GetInvestorSentiment();
-    double avg_sentiment = (sentiment_sum / this->traders.size());
+        avg_sentiment += trader->GetInvestorSentiment();
+    avg_sentiment = (avg_sentiment / this->traders.size());
 
     // Update price
     this->price *= (demand + avg_sentiment);
@@ -83,9 +93,14 @@ double Coin::GetMiningEfficiency() {
     return this->mining_efficiency;
 }
 
-void Coin::AddTrader(Investor* exchange) {
+void Coin::AddExchange(Exchange* exchange) {
     // Add new exchange trading this coin
-    this->traders.push_back(exchange);
+    this->exchanges.push_back(exchange);
+}
+
+void Coin::AddTrader(Investor* trader) {
+    // Add new trader trading this coin
+    this->traders.push_back(trader);
 }
 
 vector<Investor*> Coin::GetTraders() {

@@ -9,12 +9,22 @@ Coin::Coin(const string coin_name, double initial_price, double mining_efficienc
       total_supply(total_supply),
       circulating_supply(circulating_supply),
       available_coins(total_supply - circulating_supply),
-      traders()
+      traders(),
+      price_history()
 {
 }
 
 Coin::~Coin() {
 
+}
+
+void Coin::Behavior() {
+    while(true) {
+        // Every day, store coin's current price for statistics
+        this->price_history.push_back(this->price);
+
+        Wait(EVERY_DAY);
+    }
 }
 
 void Coin::IncreaseSupply(double amount) {
@@ -117,5 +127,9 @@ void Coin::PrintStats() {
     cout << " -> Total supply of coins: "         << this->total_supply << endl;
     cout << " -> Coins available for mining: "    << this->available_coins << endl;
     cout << " -> Coins in market (circulating): " << this->circulating_supply << endl;
+    size_t day = 0;
+    cout << " -> Price history (x-axis: Days, y-axis: Price): " << endl;
+    for (double price : this->price_history)
+        cout << ++day << ".Day: " << price << endl;
     cout << "-------------------------"           << endl;
 }

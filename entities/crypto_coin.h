@@ -6,7 +6,7 @@
 class Investor;
 class Exchange;
 
-class Coin {
+class Coin : public Process {
     private:
         const string coin_name;      // Unique name of coin
         double price;
@@ -16,11 +16,13 @@ class Coin {
         double available_coins;      // Coins available for mining
         vector<Investor*> traders;   // List of investors trading this coin
         vector<Exchange*> exchanges; // List of exchanges trading this coin
+        vector<double>price_history; // List storing crypto coin price for each simulation day
 
     public:
         Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply);
         ~Coin();
 
+        void Behavior() override;
         void IncreaseSupply(double amount);
         void DecreaseSupply(double amount);
         void ChangePrice(double factor);

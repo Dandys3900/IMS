@@ -16,7 +16,7 @@ class Coin : public Process {
         double available_coins;      // Coins available for mining
         vector<Investor*> traders;   // List of investors trading this coin
         vector<Exchange*> exchanges; // List of exchanges trading this coin
-        vector<double>price_history; // List storing crypto coin price for each simulation day
+        vector<double> price_history;// List storing crypto coin price for each simulation day
 
     public:
         Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply);
@@ -34,6 +34,7 @@ class Coin : public Process {
         void AddTrader(Investor* investor);
         void AddExchange(Exchange* exchange);
         vector<Investor*> GetTraders();
+        vector<double> GetPriceHistory();
         void PrintStats();
 };
 

@@ -20,10 +20,10 @@ Coin::~Coin() {
 
 void Coin::Behavior() {
     while(true) {
-        // Every day, store coin's current price for statistics
-        this->price_history.push_back(this->price);
+        // Every hour, update coin's price
+        this->UpdatePrice();
 
-        Wait(EVERY_DAY);
+        Wait(EVERY_HOUR);
     }
 }
 
@@ -52,6 +52,9 @@ void Coin::ChangePrice(double factor) {
 }
 
 void Coin::UpdatePrice() {
+    // Archive coin's price before update
+    this->price_history.push_back(this->price);
+
     // Internal logic to calculate new price of coin
     // Demand by market
     double demand = (this->circulating_supply / this->total_supply);
@@ -117,6 +120,10 @@ vector<Investor*> Coin::GetTraders() {
     return this->traders;
 }
 
+vector<double> Coin::GetPriceHistory() {
+    return this->price_history;
+}
+
 void Coin::PrintStats() {
     cout << "-------------------------"           << endl;
     cout << "Coin stats:"                         << endl;
@@ -127,9 +134,5 @@ void Coin::PrintStats() {
     cout << " -> Total supply of coins: "         << this->total_supply << endl;
     cout << " -> Coins available for mining: "    << this->available_coins << endl;
     cout << " -> Coins in market (circulating): " << this->circulating_supply << endl;
-    size_t day = 0;
-    cout << " -> Price history (x-axis: Days, y-axis: Price): " << endl;
-    for (double price : this->price_history)
-        cout << ++day << ".Day: " << price << endl;
     cout << "-------------------------"           << endl;
 }

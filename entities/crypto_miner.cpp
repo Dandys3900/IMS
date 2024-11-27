@@ -1,11 +1,11 @@
 #include "crypto_coin.h"
 #include "crypto_miner.h"
 
-CryptoMiner::CryptoMiner(double initial_rate, double hardware_efficiency, vector<Coin*> coins, const string mining_strategy)
+CryptoMiner::CryptoMiner(double initial_rate, double hardware_performance, vector<Coin*> coins, const string mining_strategy)
     : coins_mined(),
       profits(),
       mining_rate(initial_rate),
-      hardware_efficiency(hardware_efficiency),
+      hardware_performance(hardware_performance),
       coins(coins),
       mining_strategy(mining_strategy)
 {
@@ -23,7 +23,7 @@ void CryptoMiner::Behavior() {
     // When selling it to exchange, choose exchange with lowest fees, if returns 0.0 it means to try another one
     // Mine coins by mining_rate for mining_costs per coin
     // When mining_costs are low compared to coin price, higher mining and vice versa
-    // double amount = /*CALCULATE*/ 100; (INCLUDE hardware_efficiency INTO CALCULATIONS)
+    // double amount = /*CALCULATE*/ 100; (INCLUDE hardware_performance INTO CALCULATIONS)
     // double mined_amount = coin->MineCoins(amount);
     // Lower mining rate
     // if (mined_amount != amount) {
@@ -33,8 +33,8 @@ void CryptoMiner::Behavior() {
         //coin->IncreaseSupply(/*mined amount*/);
 }
 
-void CryptoMiner::SetMiningEfficiency(double new_value) {
-    this->hardware_efficiency += new_value;
+void CryptoMiner::SetMiningPerformance(double new_value) {
+    this->hardware_performance += new_value;
 }
 
 CoinsStats CryptoMiner::GetTotalMinedCoins() {

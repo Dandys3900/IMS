@@ -135,7 +135,7 @@ void ConfigHandler::InitSimulation() {
             this->miners.push_back(
                 new CryptoMiner(
                     (double)entity.at("intial_mining_rate_per_hour"),
-                    (double)entity.at("hardware_efficiency"),
+                    (double)entity.at("hardware_performance"),
                     coins,
                     (string)entity.at("mining_strategy")
                 )
@@ -152,7 +152,7 @@ void ConfigHandler::InitSimulation() {
         else if (entity_name == "tech_dev") {
             this->tech_devs.push_back(
                 new TechDeveloper(
-                    (double)entity.at("mining_efficiency_boost"),
+                    (double)entity.at("mining_performance_boost"),
                     this->miners
                 )
             );

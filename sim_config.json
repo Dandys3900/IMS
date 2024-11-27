@@ -56,7 +56,7 @@
     {
         "type" : "miner",
         "intial_mining_rate_per_hour" : 5,
-        "hardware_efficiency" : 0.5,
+        "hardware_performance" : 0.5,
         "coins" : [
             "coin1"
         ],
@@ -65,7 +65,7 @@
     {
         "type" : "miner",
         "intial_mining_rate_per_hour" : 8,
-        "hardware_efficiency" : 0.45,
+        "hardware_performance" : 0.45,
         "coins" : [
             "coin1"
         ],
@@ -79,6 +79,6 @@
     },
     {
         "type" : "tech_dev",
-        "mining_efficiency_boost" : 0.01
+        "mining_performance_boost" : 0.2
     }
 ]

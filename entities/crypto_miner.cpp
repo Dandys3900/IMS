@@ -1,4 +1,5 @@
 #include "crypto_coin.h"
+#include "crypto_exchange.h"
 #include "crypto_miner.h"
 
 CryptoMiner::CryptoMiner(double initial_rate, double hardware_performance, vector<Coin*> coins, const string mining_strategy)
@@ -16,29 +17,25 @@ CryptoMiner::~CryptoMiner() {
 }
 
 void CryptoMiner::Behavior() {
-    Coin* coin_to_mine = this->select_coin_to_mine();
-    if (coin_to_mine == nullptr) {
-        return;
-    }
+    while (true) {
+        Coin* coin_to_mine = this->SelectCoinToMine();
+        if (coin_to_mine == nullptr) {
+            continue;;
+        }
 
-    double coins_mined_per_hour = this->mining_rate * coin_to_mine->GetMiningEfficiency() * this->hardware_performance;
-    double hours_to_mine = ceil(1 / coins_mined_per_hour);
-    Wait(hours_to_mine); // Wait the minimal amount of time to mine at least one whole coin 
-    double mined_amount = coin_to_mine->MineCoins(hours_to_mine * coins_mined_per_hour);
-    // ?????
-    // double mined_amount = coin->MineCoins(amount);
-    // Lower mining rate
-    // if (mined_amount != amount) {
-       // this->mining_rate *= 0.8;
-    //}
+        double coins_mined_per_hour = this->mining_rate * coin_to_mine->GetMiningEfficiency() * this->hardware_performance;
+        double hours_to_mine = ceil(1 / coins_mined_per_hour);
+        Wait(hours_to_mine); // Wait the minimal amount of time to mine at least one whole coin 
+        double mined_amount = coin_to_mine->MineCoins(hours_to_mine * coins_mined_per_hour);
 
-    Exchange* exchange = this->select_best_exchange_for(coin_to_mine);
-    if (exchange == nullptr) {
-        return;
-    }
-    double profit = exchange->ExecuteTransaction(mined_amount, nullptr, coin_to_mine, TransactionType::SELL);
-    this->coins_mined.at(coin_to_mine->GetCoinName()) += mined_amount;
-    this->profits.at(coin_to_mine->GetCoinName()) += profit;
+        Exchange* exchange = this->SelectBestExchangeFor(coin_to_mine);
+        if (exchange == nullptr) {
+            continue;
+        }
+        double profit = exchange->ExecuteTransaction(mined_amount, nullptr, coin_to_mine, TransactionType::SELL);
+        this->coins_mined.at(coin_to_mine->GetCoinName()) += mined_amount;
+        this->profits.at(coin_to_mine->GetCoinName()) += profit;
+        }
 }
 
 void CryptoMiner::SetMiningPerformance(double new_value) {
@@ -67,18 +64,18 @@ void CryptoMiner::PrintStats() {
 }
 
 
-Coin* CryptoMiner::select_coin_to_mine() {
+Coin* CryptoMiner::SelectCoinToMine() {
     if (this->mining_strategy == "random_choice") {
-        return select_coin_to_mine_random_choice();
+        return SelectCoinToMineRandomChoice();
     }
     if (this->mining_strategy == "best_choice") {
-        return select_coin_to_mine_best_choice();
+        return SelectCoinToMineBestChoice();
     }
     return nullptr;
 }
 
 
-Coin* CryptoMiner::select_coin_to_mine_random_choice() {
+Coin* CryptoMiner::SelectCoinToMineRandomChoice() {
     if (this->coins.empty()) {
         return nullptr;
     }
@@ -86,7 +83,7 @@ Coin* CryptoMiner::select_coin_to_mine_random_choice() {
 }
 
 
-Coin* CryptoMiner::select_coin_to_mine_best_choice() {
+Coin* CryptoMiner::SelectCoinToMineBestChoice() {
     Coin* best_coin = nullptr;
     double best_coin_utility = 0.0;
     for (Coin* coin : this->coins) {
@@ -100,7 +97,7 @@ Coin* CryptoMiner::select_coin_to_mine_best_choice() {
 }
 
 
-Exchange* CryptoMiner::select_best_exchange_for(Coin* coin) {
+Exchange* CryptoMiner::SelectBestExchangeFor(Coin* coin) {
     Exchange* best_exchange = nullptr;
     double best_exchange_fee_factor = 0.0;
     for (Exchange* exchange : coin->GetExchanges()) {

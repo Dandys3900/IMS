@@ -2,6 +2,7 @@
 #define CRYPTO_MINER_H
 
 #include "includes.h"
+#include "crypto_exchange.h"
 
 class Coin;
 
@@ -22,6 +23,12 @@ class CryptoMiner : public Process {
         void SetMiningPerformance(double new_value);
         CoinsStats GetTotalMinedCoins();
         void PrintStats();
+    
+    protected:
+        Coin* select_coin_to_mine();
+        Coin* select_coin_to_mine_random_choice();
+        Coin* select_coin_to_mine_best_choice();
+        Exchange* select_best_exchange_for(Coin* coin);
 };
 
 #endif // CRYPTO_MINER_H

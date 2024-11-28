@@ -20,7 +20,7 @@ void CryptoMiner::Behavior() {
     while (true) {
         Coin* coin_to_mine = this->SelectCoinToMine();
         if (coin_to_mine == nullptr) {
-            continue;;
+            continue;
         }
 
         double coins_mined_per_hour = this->mining_rate * coin_to_mine->GetMiningEfficiency() * this->hardware_performance;

@@ -2,9 +2,9 @@
 #define CRYPTO_MINER_H
 
 #include "includes.h"
-#include "crypto_exchange.h"
 
 class Coin;
+class Exchange;
 
 class CryptoMiner : public Process {
     private:
@@ -25,10 +25,10 @@ class CryptoMiner : public Process {
         void PrintStats();
     
     protected:
-        Coin* select_coin_to_mine();
-        Coin* select_coin_to_mine_random_choice();
-        Coin* select_coin_to_mine_best_choice();
-        Exchange* select_best_exchange_for(Coin* coin);
+        Coin* SelectCoinToMine();
+        Coin* SelectCoinToMineRandomChoice();
+        Coin* SelectCoinToMineBestChoice();
+        Exchange* SelectBestExchangeFor(Coin* coin);
 };
 
 #endif // CRYPTO_MINER_H

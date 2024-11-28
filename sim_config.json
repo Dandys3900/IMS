@@ -7,29 +7,33 @@
         "type" : "coin",
         "name" : "coin1",
         "initial_price" : 10,
+        "mining_efficiency" : 0.7,
         "total_supply" : 1000000,
         "circulating_supply" : 10000
     },
     {
         "type" : "investor_longterm",
-        "initial_balance" : [
+        "coins" : [
             {
-                "coin1" : 100
+                "coin1" : 100,
+                "sell_threshold" : 50,
+                "buy_threshold" : 25
             }
         ]
     },
     {
         "type" : "investor_shortterm",
-        "initial_balance" : [
+        "coins" : [
             {
-                "coin1" : 200
+                "coin1" : 200,
+                "sell_threshold" : 70,
+                "buy_threshold" : 55
             }
         ]
     },
     {
         "type" : "exchange",
         "fee" : 0.2,
-        "gov_taxes" : 0.05,
         "initial_coin_amount" : [
             {
                 "coin1" : 10000
@@ -39,7 +43,6 @@
     {
         "type" : "exchange",
         "fee" : 0.15,
-        "gov_taxes" : 0.05,
         "initial_coin_amount" : [
             {
                 "coin1" : 50000
@@ -53,18 +56,20 @@
     {
         "type" : "miner",
         "intial_mining_rate_per_hour" : 5,
-        "initial_effeciency" : 0.4,
+        "hardware_performance" : 0.5,
         "coins" : [
             "coin1"
-        ]
+        ],
+        "mining_strategy" : "random_choice"
     },
     {
         "type" : "miner",
         "intial_mining_rate_per_hour" : 8,
-        "initial_effeciency" : 0.25,
+        "hardware_performance" : 0.45,
         "coins" : [
             "coin1"
-        ]
+        ],
+        "mining_strategy" : "best_choice"
     },
     {
         "type" : "elon_tweeter"
@@ -74,6 +79,6 @@
     },
     {
         "type" : "tech_dev",
-        "mining_efficiency_boost" : 0.01
+        "mining_performance_boost" : 0.2
     }
 ]

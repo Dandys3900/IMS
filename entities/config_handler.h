@@ -18,16 +18,16 @@ class ConfigHandler {
     private:
         json config;
         // Store created entities
-        unordered_set<Coin*> coins;
-        unordered_set<Investor*> investors;
-        unordered_set<Exchange*> exchanges;
-        unordered_set<CryptoMiner*> miners;
-        unordered_set<ElonTweet*> elons;
+        vector<Coin*> coins;
+        vector<Investor*> investors;
+        vector<Exchange*> exchanges;
+        vector<CryptoMiner*> miners;
+        vector<ElonTweet*> elons;
         Government* government;
-        unordered_set<TechDeveloper*> tech_devs;
+        vector<TechDeveloper*> tech_devs;
 
         template <typename T>
-        void freeSet(std::unordered_set<T*>& set);
+        void freeSet(std::vector<T*>& set);
 
     public:
         ConfigHandler();

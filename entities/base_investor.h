@@ -11,33 +11,23 @@ class Coin;
 class Investor : public Process {
     protected:
         CoinsStats balance;
-        unordered_set<Coin*> coins;
+        CoinsThresholds thresholds;
+        vector<Coin*> coins;
+        double sentiment;
 
     public:
-        Investor(CoinsStats initial_balance, unordered_set<Coin*> coins)
-            : balance(initial_balance),
-              coins(coins)
-        {
-        }
-
+        Investor(CoinsStats initial_balance, CoinsThresholds thresholds, vector<Coin*> coins);
         virtual ~Investor()
         {
         }
 
         virtual void BuyCoins(double amount, Coin* coin)  = 0;
         virtual void SellCoins(double amount, Coin* coin) = 0;
-        virtual void ExchangeClosedReaction() = 0;
 
-        void printStats() {
-            cout << "-------------------------" << endl;
-            cout << "Investor stats:"           << endl;
-            cout << " -> Traided coins: "       << endl;
-            for (auto coin : this->coins) {
-                string coinname = coin->getCoinName();
-                cout << "Name: " << coinname << " final balance: " << this->balance.at(coinname) << endl;
-            }
-            cout << "-------------------------" << endl;
-        }
+        void PositiveNewsReaction();
+        void NegativeNewsReaction();
+        double GetInvestorSentiment();
+        void PrintStats();
 };
 
 #endif // BASE_INVESTOR_H

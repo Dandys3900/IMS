@@ -8,11 +8,11 @@ class CryptoMiner;
 class TechDeveloper : public Process {
     private:
         // Helps miners mine more coins
-        double efficiency_boost;
-        unordered_set<CryptoMiner*> miners;
+        double performance_boost;
+        vector<CryptoMiner*> miners;
 
     public:
-        TechDeveloper(double efficiency_boost, unordered_set<CryptoMiner*> miners);
+        TechDeveloper(double performance_boost, vector<CryptoMiner*> miners);
         ~TechDeveloper();
 
         void Behavior() override;

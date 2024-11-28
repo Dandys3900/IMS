@@ -19,19 +19,19 @@ class Exchange : public Facility {
         double sold_coins;
         CoinsStats stacked_coins;
         double gov_taxes;
-        unordered_set<Investor*> customers;
-        unordered_set<Coin*> coins;
+        vector<Investor*> customers;
+        vector<Coin*> coins;
         bool closed_by_gov;
 
     public:
-        Exchange(double fee, CoinsStats init_coins, double gov_taxes, unordered_set<Investor*> customers, unordered_set<Coin*> coins);
+        Exchange(double fee, CoinsStats init_coins, vector<Investor*> customers, vector<Coin*> coins);
         ~Exchange();
 
         double ExecuteTransaction(double amount, Investor* buyer, Coin* coin, TransactionType type);
         void ClosingExchange();
-        double getInterestRate();
+        double GetInterestRate(const string coin_name);
         void UpdateGovTaxes(double new_value);
-        void printStats();
+        void PrintStats();
 };
 
 #endif // CRYPTO_EXCHANGE_H

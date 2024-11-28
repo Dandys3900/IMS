@@ -5,18 +5,19 @@
 
 class Exchange;
 
-class Government : public Event {
+class Government : public Process {
     private:
         double init_taxes;
-        unordered_set<Exchange*> exchanges;
+        vector<Exchange*> exchanges;
 
     public:
-        Government(double init_taxes, unordered_set<Exchange*> exchanges);
+        Government(double init_taxes, vector<Exchange*> exchanges);
         ~Government();
 
         void Behavior() override;
         void UpdateTaxes(double new_value);
-        void printStats();
+        double GetCurrentTaxes();
+        void PrintStats();
 };
 
 #endif // GOVERNMENT_H

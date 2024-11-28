@@ -3,32 +3,39 @@
 
 #include "includes.h"
 
+class Investor;
 class Exchange;
 
-class Coin {
+class Coin : public Process {
     private:
-        const string coin_name;    // Unique name of coin
+        const string coin_name;      // Unique name of coin
         double price;
-        double total_supply;       // circulating_supply + available_coins
-        double circulating_supply; // Coins that someone holds
-        double available_coins;    // Coins available for mining
-        unordered_set<Exchange*> trading_exchanges; // List of exchanges trading this coin
+        double mining_efficiency;    // Each coin is mined in different way, with different algorithms
+        double total_supply;         // circulating_supply + available_coins
+        double circulating_supply;   // Coins that someone holds
+        double available_coins;      // Coins available for mining
+        vector<Investor*> traders;   // List of investors trading this coin
+        vector<Exchange*> exchanges; // List of exchanges trading this coin
+        vector<double> price_history;// List storing crypto coin price for each simulation day
 
     public:
-        Coin(const string coin_name, double initial_price, double total_supply, double circulating_supply);
+        Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply);
         ~Coin();
 
+        void Behavior() override;
         void IncreaseSupply(double amount);
         void DecreaseSupply(double amount);
-        void IncreasePrice(double factor);
-        void DecreasePrice(double factor);
+        void ChangePrice(double factor);
         void UpdatePrice();
         double MineCoins(double amount);
-        const string getCoinName();
-        double getCurrentPrice();
-        void addTradingExchange(Exchange* exchange);
-        unordered_set<Exchange*> getTradingExchanges();
-        void printStats();
+        const string GetCoinName();
+        double GetCurrentPrice();
+        double GetMiningEfficiency();
+        void AddTrader(Investor* investor);
+        void AddExchange(Exchange* exchange);
+        vector<Investor*> GetTraders();
+        vector<double> GetPriceHistory();
+        void PrintStats();
 };
 
 #endif // CRYPTOCOIN_H

@@ -1,7 +1,7 @@
 #include "crypto_exchange.h"
 #include "government.h"
 
-Government::Government(double init_taxes, unordered_set<Exchange*> exchanges)
+Government::Government(double init_taxes, vector<Exchange*> exchanges)
     : init_taxes(init_taxes),
       exchanges(exchanges)
 {
@@ -12,15 +12,34 @@ Government::~Government() {
 }
 
 void Government::Behavior() {
-    // Randomly select exchange to close (f.e. with 10% chance of closing)
+    while(true) {
+        // It's 8% probability government will shutdown exchange
+        if (Random() <= 0.08) {
+            // Randomly select exchange to close
+            int exchange_index = static_cast<int>(Uniform(0, this->exchanges.size()));
+
+            this->exchanges.at(exchange_index)->ClosingExchange();
+        }
+
+        // Repeat every half-year
+        Wait(HALF_YEAR);
+    }
 }
 
 void Government::UpdateTaxes(double new_value) {
-    // F.e. decide by current crypto price whether its good idea to set new taxes to all exchanges
-    // Use Exchange::UpdateGovTaxes()
+    // Update government taxes in range <-1.2% , +1.2%>
+    this->init_taxes += Uniform(-0.012, 0.012);
+
+    // Populate change to exchanges
+    for (auto exchange : this->exchanges)
+        exchange->UpdateGovTaxes(this->init_taxes);
 }
 
-void Government::printStats() {
+double Government::GetCurrentTaxes() {
+    return this->init_taxes;
+}
+
+void Government::PrintStats() {
     cout << "-------------------------"                    << endl;
     cout << "Governments stats:"                           << endl;
     cout << " -> Current crypto tax: " << this->init_taxes << endl;

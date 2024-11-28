@@ -37,10 +37,11 @@ void ConfigHandler::InitSimulation() {
             Init(0, (double)entity.at("sim_duration_years") * YEAR);
         }
         else if (entity_name == "coin") {
-            this->coins.insert(
+            this->coins.push_back(
                 new Coin(
                     (string)entity.at("name"),
                     (double)entity.at("initial_price"),
+                    (double)entity.at("mining_efficiency"),
                     (double)entity.at("total_supply"),
                     (double)entity.at("circulating_supply")
                 )
@@ -48,52 +49,64 @@ void ConfigHandler::InitSimulation() {
         }
         else if (entity_name == "investor_longterm" || entity_name == "investor_shortterm") {
             // Create set of coins trader will trade
-            unordered_set<Coin*> coins;
+            vector<Coin*> coins;
             CoinsStats stats;
+            CoinsThresholds thresholds;
 
-            for (auto [key, value] : entity.at("initial_balance").items()) {
+            for (auto coin : entity.at("coins")) {
+                // Get coin info (name, count)
+                const auto coininfo = coin.begin();
+                // Find coin matching given coin name
                 for (auto coin : this->coins) {
-                    if (coin->getCoinName() == (string)key) {
-                        coins.insert(coin);
-                        stats.insert(pair<string, double>(key, value));
+                    if (coin->GetCoinName() == (string)coininfo.key()) {
+                        coins.push_back(coin);
+                        stats.insert({(string)coininfo.key(), (double)coininfo.value()});
                     }
                 }
+                // Add threshold for this coin (coinname, sell and buy thresholds)
+                thresholds.insert({
+                    (string)coininfo.key(), {
+                        (double)coin.at("sell_threshold"),
+                        (double)coin.at("buy_threshold")
+                    }
+                });
             }
 
             if (entity_name == "investor_longterm")
-                this->investors.insert(
+                this->investors.push_back(
                     new LongTermInvestor(
                         stats,
+                        thresholds,
                         coins
                     )
                 );
             else // investor_shortterm
-                this->investors.insert(
+                this->investors.push_back(
                     new ShortTermInvestor(
                         stats,
+                        thresholds,
                         coins
                     )
                 );
         }
         else if (entity_name == "exchange") {
             // Create set of coins exchange will trade
-            unordered_set<Coin*> coins;
+            vector<Coin*> coins;
             CoinsStats stats;
 
             for (auto [key, value] : entity.at("initial_coin_amount").items()) {
                 for (auto coin : this->coins) {
-                    if (coin->getCoinName() == (string)key) {
-                        coins.insert(coin);
-                        stats.insert(pair<string, double>(key, value));
+                    if (coin->GetCoinName() == (string)key) {
+                        coins.push_back(coin);
+                        stats.insert({(string)key, (double)value});
                     }
                 }
             }
 
-            this->exchanges.insert(
+            this->exchanges.push_back(
                 new Exchange(
                     (double)entity.at("fee"),
                     stats,
-                    (double)entity.at("gov_taxes"),
                     this->investors,
                     coins
                 )
@@ -104,28 +117,32 @@ void ConfigHandler::InitSimulation() {
                 (double)entity.at("init_taxes"),
                 this->exchanges
             );
+            // Populate government taxes for all exchanges
+            for (auto exchange : this->exchanges)
+                exchange->UpdateGovTaxes(this->government->GetCurrentTaxes());
         }
         else if (entity_name == "miner") {
             // Create set of coins miner will mine
-            unordered_set<Coin*> coins;
+            vector<Coin*> coins;
 
             for (auto targetcoin : entity.at("coins")) {
                 for (auto coin : this->coins) {
-                    if (coin->getCoinName() == (string)targetcoin)
-                        coins.insert(coin);
+                    if (coin->GetCoinName() == (string)targetcoin)
+                        coins.push_back(coin);
                 }
             }
 
-            this->miners.insert(
+            this->miners.push_back(
                 new CryptoMiner(
                     (double)entity.at("intial_mining_rate_per_hour"),
-                    (double)entity.at("initial_effeciency"),
-                    coins
+                    (double)entity.at("hardware_performance"),
+                    coins,
+                    (string)entity.at("mining_strategy")
                 )
             );
         }
         else if (entity_name == "elon_tweeter") {
-            this->elons.insert(
+            this->elons.push_back(
                 new ElonTweet(
                     // Use first coin by default, TODO: Change this
                     *(this->coins.begin())
@@ -133,9 +150,9 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else if (entity_name == "tech_dev") {
-            this->tech_devs.insert(
+            this->tech_devs.push_back(
                 new TechDeveloper(
-                    (double)entity.at("mining_efficiency_boost"),
+                    (double)entity.at("mining_performance_boost"),
                     this->miners
                 )
             );
@@ -146,7 +163,7 @@ void ConfigHandler::InitSimulation() {
 }
 
 template <typename T>
-void ConfigHandler::freeSet(std::unordered_set<T*>& set) {
+void ConfigHandler::freeSet(std::vector<T*>& set) {
     // Properly free set pointers
     for (T* ptr : set)
         delete ptr;

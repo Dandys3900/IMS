@@ -23,8 +23,8 @@ class ConfigHandler {
         vector<Exchange*> exchanges;
         vector<CryptoMiner*> miners;
         vector<ElonTweet*> elons;
-        Government* government;
         vector<TechDeveloper*> tech_devs;
+        Government* government;
 
         template <typename T>
         void freeSet(std::vector<T*>& set);
@@ -34,6 +34,7 @@ class ConfigHandler {
         ~ConfigHandler();
 
         void InitSimulation();
+        void ActivateSimulation();
 };
 
 #endif // CONF_HANDLER_H

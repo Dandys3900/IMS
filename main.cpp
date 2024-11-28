@@ -2,8 +2,14 @@
 
 int main (int argc, char *argv[]) {
     ConfigHandler* config_handler = new ConfigHandler();
-    // Load enitities from
-    config_handler->InitSimulation();
+    try {
+        // Load enitities from
+        config_handler->InitSimulation();
+        // Activate entities
+        config_handler->ActivateSimulation();
+    } catch (const exception& e) {
+        cout << "Error: " << e.what() << endl;
+    }
 
     Run();
 
@@ -12,7 +18,7 @@ int main (int argc, char *argv[]) {
     // TODO: Ouptut enitites stats for each experiment
 
     // Cleanup
-    delete config_handler;
+    //delete config_handler;
 
     return EXIT_SUCCESS;
 }

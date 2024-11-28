@@ -74,8 +74,20 @@ void Coin::UpdatePrice() {
         avg_sentiment += trader->GetInvestorSentiment();
     avg_sentiment = (avg_sentiment / this->traders.size());
 
-    // Update price
-    this->price *= (demand + avg_sentiment);
+    /* POSSIBLE CALCULATIONS FOR COIN PRICE (to be decided which to use)
+        double current_time = ((Time + 1) / 24);
+        this->price += (
+            pow((current_time / 693), 5.526) * pow(10, (
+                pow(0.9998, current_time) * (2 * pow(
+                abs(sin(2.983 * sqrt(sqrt(current_time)) - 0.57)) - 1, 2) - 1))
+            ));
+
+        // Update price
+        this->price += ((demand * this->mining_efficiency * avg_sentiment) / this->total_supply);
+    */
+
+    double current_time = Time + 1;
+    this->price = (this->price * pow(10, pow(0.7, current_time) * sin(2 * M_PI * current_time - 0.4) * demand * avg_sentiment));
 }
 
 double Coin::MineCoins(double amount) {

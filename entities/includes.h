@@ -18,6 +18,7 @@
 #include <fstream>
 #include <exception>
 #include <map>
+#include <cmath>
 
 using namespace std;
 

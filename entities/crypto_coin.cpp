@@ -106,6 +106,10 @@ double Coin::GetMiningEfficiency() {
     return this->mining_efficiency;
 }
 
+vector<Exchange*> Coin::GetExchanges() {
+    return this->exchanges;
+}
+
 void Coin::AddExchange(Exchange* exchange) {
     // Add new exchange trading this coin
     this->exchanges.push_back(exchange);

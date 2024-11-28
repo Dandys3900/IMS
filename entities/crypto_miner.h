@@ -4,6 +4,7 @@
 #include "includes.h"
 
 class Coin;
+class Exchange;
 
 class CryptoMiner : public Process {
     private:
@@ -22,6 +23,12 @@ class CryptoMiner : public Process {
         void SetMiningPerformance(double new_value);
         CoinsStats GetTotalMinedCoins();
         void PrintStats();
+    
+    protected:
+        Coin* SelectCoinToMine();
+        Coin* SelectCoinToMineRandomChoice();
+        Coin* SelectCoinToMineBestChoice();
+        Exchange* SelectBestExchangeFor(Coin* coin);
 };
 
 #endif // CRYPTO_MINER_H

@@ -54,22 +54,28 @@ void ConfigHandler::InitSimulation() {
             CoinsThresholds thresholds;
 
             for (auto coin : entity.at("coins")) {
-                // Get coin info (name, count)
-                const auto coininfo = coin.begin();
-                // Find coin matching given coin name
-                for (auto coin : this->coins) {
-                    if (coin->GetCoinName() == (string)coininfo.key()) {
-                        coins.push_back(coin);
-                        stats.insert({(string)coininfo.key(), (double)coininfo.value()});
+                for (auto coin_data : coin.items()) {
+                    // Extract key from each dictionary record
+                    string key = coin_data.key();
+                    // Get coin info (name, count)
+                    if (key != "sell_threshold" && key != "buy_threshold") {
+                        // Find coin matching given coin name
+                        for (auto coin : this->coins) {
+                            if (coin->GetCoinName() == key) {
+                                coins.push_back(coin);
+                                stats.insert({key, (double)coin_data.value()});
+                            }
+                        }
+                        // Add threshold for this coin (coinname, sell and buy thresholds)
+                        thresholds.insert({
+                            key, {
+                                (double)coin.at("sell_threshold"),
+                                (double)coin.at("buy_threshold")
+                            }
+                        });
+                        break;
                     }
                 }
-                // Add threshold for this coin (coinname, sell and buy thresholds)
-                thresholds.insert({
-                    (string)coininfo.key(), {
-                        (double)coin.at("sell_threshold"),
-                        (double)coin.at("buy_threshold")
-                    }
-                });
             }
 
             if (entity_name == "investor_longterm")
@@ -160,6 +166,21 @@ void ConfigHandler::InitSimulation() {
         else
             throw ProgramException("Invalid entity type: " + (string)entity.at("type"));
     }
+}
+
+void ConfigHandler::ActivateSimulation() {
+    // Activate each entity in vectors
+    for (auto coin : this->coins)
+        coin->Activate();
+    for (auto investor : this->investors)
+        investor->Activate();
+    for (auto miner : this->miners)
+        miner->Activate();
+    for (auto elon : this->elons)
+        elon->Activate();
+    for (auto tech_dev : this->tech_devs)
+        tech_dev->Activate();
+    this->government->Activate();
 }
 
 template <typename T>

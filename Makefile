@@ -10,4 +10,7 @@ $(EXE): $(SRCS)
 clean:
 	rm -f $(EXE)
 
-.PHONY: all clean
+run: ims-sim
+	./ims-sim
+
+.PHONY: all run clean

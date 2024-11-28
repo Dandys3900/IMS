@@ -25,7 +25,7 @@ void CryptoMiner::Behavior() {
 
         double coins_mined_per_hour = this->mining_rate * coin_to_mine->GetMiningEfficiency() * this->hardware_performance;
         double hours_to_mine = ceil(1 / coins_mined_per_hour);
-        Wait(hours_to_mine); // Wait the minimal amount of time to mine at least one whole coin 
+        Wait(hours_to_mine); // Wait the minimal amount of time to mine at least one whole coin
         double mined_amount = coin_to_mine->MineCoins(hours_to_mine * coins_mined_per_hour);
 
         Exchange* exchange = this->SelectBestExchangeFor(coin_to_mine);
@@ -101,9 +101,9 @@ Exchange* CryptoMiner::SelectBestExchangeFor(Coin* coin) {
     Exchange* best_exchange = nullptr;
     double best_exchange_fee_factor = 0.0;
     for (Exchange* exchange : coin->GetExchanges()) {
-        if (!exchange->IsClosed() && exchange->GetTolalFeeFactor() >= best_exchange_fee_factor) {
+        if (!exchange->IsClosed() && exchange->GetTotalFeeFactor() >= best_exchange_fee_factor) {
             best_exchange = exchange;
-            best_exchange_fee_factor = exchange->GetTolalFeeFactor();
+            best_exchange_fee_factor = exchange->GetTotalFeeFactor();
         }
     }
     return best_exchange;

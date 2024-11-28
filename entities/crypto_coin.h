@@ -32,6 +32,7 @@ class Coin : public Process {
         double GetCurrentPrice();
         double GetMiningEfficiency();
         void AddTrader(Investor* investor);
+        vector<Exchange*> GetExchanges();
         void AddExchange(Exchange* exchange);
         vector<Investor*> GetTraders();
         vector<double> GetPriceHistory();

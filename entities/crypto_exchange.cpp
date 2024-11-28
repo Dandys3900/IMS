@@ -48,7 +48,7 @@ double Exchange::ExecuteTransaction(double amount, Investor* buyer, Coin* coin, 
         coin_amount += amount;
     }
     // Apply government taxes and individual exchange fee
-    return amount * (1.0 - this->gov_taxes) * (1.0 - this->transaction_fee);
+    return amount * this->GetTolalFeeFactor();
 }
 
 void Exchange::ClosingExchange() {
@@ -70,8 +70,16 @@ double Exchange::GetInterestRate(const string coin_name) {
     return (stacked_coins / initial_amount);
 }
 
+double Exchange::GetTolalFeeFactor() {
+    return (1.0 - this->gov_taxes) * (1.0 - this->transaction_fee);
+}
+
 void Exchange::UpdateGovTaxes(double new_value) {
     this->gov_taxes = new_value;
+}
+
+bool Exchange::IsClosed() {
+    return this->closed_by_gov;
 }
 
 void Exchange::PrintStats() {

@@ -30,7 +30,9 @@ class Exchange : public Facility {
         double ExecuteTransaction(double amount, Investor* buyer, Coin* coin, TransactionType type);
         void ClosingExchange();
         double GetInterestRate(const string coin_name);
+        double GetTolalFeeFactor();
         void UpdateGovTaxes(double new_value);
+        bool IsClosed();
         void PrintStats();
 };
 

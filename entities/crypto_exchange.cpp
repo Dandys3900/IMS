@@ -64,7 +64,7 @@ double Exchange::GetInterestRate(const string coin_name) {
     double stacked_coins = this->stacked_coins.at(coin_name);
     double initial_amount = this->initial_coins.at(coin_name);
 
-    return (stacked_coins / initial_amount);
+    return (1 - (stacked_coins / initial_amount));
 }
 
 double Exchange::GetTotalFeeFactor() {

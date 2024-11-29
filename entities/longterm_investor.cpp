@@ -12,10 +12,6 @@ LongTermInvestor::~LongTermInvestor() {
 }
 
 void LongTermInvestor::Behavior() {
-    // Randomly buys new coins from exchange
-    // Amount of new coins is affected by exchange fees
-    // For buy and sell behaviour use given values in CoinsThresholds thresholds
-    // Consider his current sentiment (mood)
     while (true) {
         for (Coin* coin : this->coins) {
             if (coin->GetCurrentPrice() < this->thresholds.at(coin->GetCoinName()).first) {
@@ -30,19 +26,17 @@ void LongTermInvestor::Behavior() {
 }
 
 void LongTermInvestor::BuyCoins(Coin* coin) {
-    // Buy coins from randomly selected exchange
     Exchange* exchange = Exchange::SelectRandomExchangeFor(coin);
     if (coin == nullptr) {
         return;
     }
-    double coins_to_buy = Normal(50, 10);
+    double coins_to_buy = Normal((84 / coin->GetCurrentPrice()), 10);
     coins_to_buy += coins_to_buy * this->GetInvestorSentiment() * 0.5; // not as affected by his sentiment
     double coins_bought = exchange->ExecuteTransaction(coins_to_buy, this, coin, TransactionType::BUY);
     this->balance.at(coin->GetCoinName()) += coins_bought;
 }
 
 void LongTermInvestor::SellCoins(Coin* coin) {
-    // By his intern logic, perform selling of coins
     Exchange* exchange = Exchange::SelectBestExchangeFor(coin);
     if (coin == nullptr) {
         return;

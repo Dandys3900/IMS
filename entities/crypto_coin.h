@@ -30,6 +30,7 @@ class Coin : public Process {
         double MineCoins(double amount);
         const string GetCoinName();
         double GetCurrentPrice();
+        double GetPriceTrend(size_t max_samples);
         double GetMiningEfficiency();
         void AddTrader(Investor* investor);
         vector<Exchange*> GetExchanges();

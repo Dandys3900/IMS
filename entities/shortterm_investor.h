@@ -13,8 +13,8 @@ class ShortTermInvestor : public Investor {
         ~ShortTermInvestor();
 
         void Behavior() override;
-        void BuyCoins(double amount, Coin* coin)  override;
-        void SellCoins(double amount, Coin* coin) override;
+        void BuyCoins(Coin* coin)  override;
+        void SellCoins(Coin* coin) override;
 };
 
 #endif // SHORTTERM_INVESTOR_H

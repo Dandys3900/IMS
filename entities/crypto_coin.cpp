@@ -114,6 +114,34 @@ double Coin::GetCurrentPrice() {
     return this->price;
 }
 
+double Coin::GetPriceTrend(size_t num_samples) {
+    // Extract the last max_samples samples
+    num_samples = min(num_samples, this->price_history.size());
+    if (num_samples == 0) {
+        return 0.0;
+    }
+    std::vector<double> recent_prices(this->price_history.end() - num_samples, this->price_history.end());
+
+    // Calculate the slope using least squares formula
+    double sum_indices = (num_samples * (num_samples + 1)) / 2; // 1 + 2 + 3 + ... + num_samples
+    double sum_prices = 0.0;
+    for (double price : recent_prices) {
+        sum_prices += price;
+    }
+
+    double mean_index = sum_indices / num_samples;
+    double mean_price = sum_prices / num_samples;
+
+    double numerator = 0.0;
+    double denominator = 0.0;
+    for (int i = 0; i < num_samples; i++) {
+        numerator += (i - mean_index) * (i - mean_price);
+        denominator += (i - mean_index) * (i - mean_index);
+    }
+
+    return denominator == 0 ? 0.0 : numerator / denominator;
+}
+
 double Coin::GetMiningEfficiency() {
     return this->mining_efficiency;
 }

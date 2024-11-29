@@ -92,3 +92,23 @@ void Exchange::PrintStats() {
     cout << " -> Closed by government: " << this->closed_by_gov << endl;
     cout << "-------------------------"                         << endl;
 }
+
+Exchange* Exchange::SelectRandomExchangeFor(Coin* coin) {
+    vector<Exchange*> exchanges = coin->GetExchanges();
+    if (exchanges.empty()) {
+        return nullptr;
+    }
+    return exchanges.at((std::size_t)Uniform(0, exchanges.size()));
+}
+
+Exchange* Exchange::SelectBestExchangeFor(Coin* coin) {
+    Exchange* best_exchange = nullptr;
+    double best_exchange_fee_factor = 0.0;
+    for (Exchange* exchange : coin->GetExchanges()) {
+        if (!exchange->IsClosed() && exchange->GetTolalFeeFactor() >= best_exchange_fee_factor) {
+            best_exchange = exchange;
+            best_exchange_fee_factor = exchange->GetTolalFeeFactor();
+        }
+    }
+    return best_exchange;
+}

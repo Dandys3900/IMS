@@ -28,7 +28,6 @@ class CryptoMiner : public Process {
         Coin* SelectCoinToMine();
         Coin* SelectCoinToMineRandomChoice();
         Coin* SelectCoinToMineBestChoice();
-        Exchange* SelectBestExchangeFor(Coin* coin);
 };
 
 #endif // CRYPTO_MINER_H

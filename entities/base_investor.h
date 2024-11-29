@@ -21,8 +21,8 @@ class Investor : public Process {
         {
         }
 
-        virtual void BuyCoins(double amount, Coin* coin)  = 0;
-        virtual void SellCoins(double amount, Coin* coin) = 0;
+        virtual void BuyCoins(Coin* coin)  = 0;
+        virtual void SellCoins(Coin* coin) = 0;
 
         void PositiveNewsReaction();
         void NegativeNewsReaction();

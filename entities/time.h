@@ -5,6 +5,7 @@
 #define EVERY_HOUR 1
 #define EVERY_12H  12
 #define EVERY_DAY  24
+#define EVERY_WEEK 168  // 24 * 7
 #define EACH_MONTH 730  // (365 * 24) / 12
 #define HALF_YEAR  4380 // (365 * 24) / 2
 #define YEAR       8760 // 365 * 24

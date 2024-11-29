@@ -34,6 +34,9 @@ class Exchange : public Facility {
         void UpdateGovTaxes(double new_value);
         bool IsClosed();
         void PrintStats();
+
+        static Exchange* SelectRandomExchangeFor(Coin* coin);
+        static Exchange* SelectBestExchangeFor(Coin* coin);
 };
 
 #endif // CRYPTO_EXCHANGE_H

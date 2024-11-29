@@ -145,10 +145,12 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else if (entity_name == "elon_tweeter") {
+            // Randomly select coin which will Elon affect
+            int coin_index = static_cast<int>(Uniform(0, this->coins.size()));
+
             this->elons.push_back(
                 new ElonTweet(
-                    // Use first coin by default, TODO: Change this
-                    *(this->coins.begin())
+                    this->coins.at(coin_index)
                 )
             );
         }

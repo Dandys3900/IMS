@@ -8,7 +8,7 @@ Government::Government(double init_taxes, vector<Exchange*> exchanges)
 }
 
 Government::~Government() {
-
+    this->PrintStats();
 }
 
 void Government::Behavior() {
@@ -21,14 +21,21 @@ void Government::Behavior() {
             this->exchanges.at(exchange_index)->ClosingExchange();
         }
 
+        // Update taxes
+        this->UpdateTaxes();
+
         // Repeat every half-year
         Wait(HALF_YEAR);
     }
 }
 
-void Government::UpdateTaxes(double new_value) {
+void Government::UpdateTaxes() {
     // Update government taxes in range <-1.2% , +1.2%>
     this->init_taxes += Uniform(-0.012, 0.012);
+
+    // Avoid negative taxes
+    if (this->init_taxes < 0.0)
+        this->init_taxes = 0.0;
 
     // Populate change to exchanges
     for (auto exchange : this->exchanges)
@@ -42,6 +49,6 @@ double Government::GetCurrentTaxes() {
 void Government::PrintStats() {
     cout << "-------------------------"                    << endl;
     cout << "Governments stats:"                           << endl;
-    cout << " -> Current crypto tax: " << this->init_taxes << endl;
+    cout << " -> Current crypto tax: " << (this->init_taxes * 100) << "%" << endl;
     cout << "-------------------------"                    << endl;
 }

@@ -11,19 +11,16 @@
 
 ConfigHandler::ConfigHandler() {
     // Load simulation config from JSON file
-    std::ifstream config_file("sim_config.json");
+    ifstream config_file("sim_config.json");
     this->config = json::parse(config_file);
+
+    // Clear file for storing coins price change over time
+    ofstream price_file("price_vals", ios::trunc);
+    price_file.close();
 }
 
 ConfigHandler::~ConfigHandler() {
-    // Cleanup
-    delete this->government;
-    freeSet(this->coins);
-    freeSet(this->investors);
     freeSet(this->exchanges);
-    freeSet(this->miners);
-    freeSet(this->elons);
-    freeSet(this->tech_devs);
 }
 
 void ConfigHandler::InitSimulation() {

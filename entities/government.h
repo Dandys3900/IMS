@@ -15,7 +15,7 @@ class Government : public Process {
         ~Government();
 
         void Behavior() override;
-        void UpdateTaxes(double new_value);
+        void UpdateTaxes();
         double GetCurrentTaxes();
         void PrintStats();
 };

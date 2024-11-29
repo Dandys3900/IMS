@@ -9,6 +9,7 @@ class Exchange;
 class Coin : public Process {
     private:
         const string coin_name;      // Unique name of coin
+        double init_price;           // Store for statistics output
         double price;
         double mining_efficiency;    // Each coin is mined in different way, with different algorithms
         double total_supply;         // circulating_supply + available_coins
@@ -34,8 +35,7 @@ class Coin : public Process {
         void AddTrader(Investor* investor);
         vector<Exchange*> GetExchanges();
         void AddExchange(Exchange* exchange);
-        vector<Investor*> GetTraders();
-        vector<double> GetPriceHistory();
+        void StorePriceHistory();
         void PrintStats();
 };
 

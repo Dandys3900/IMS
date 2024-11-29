@@ -33,6 +33,13 @@ void CryptoMiner::Behavior() {
         double coins_mined_per_hour = this->mining_rate * coin_to_mine->GetMiningEfficiency() * this->hardware_performance;
         double mined_amount = coin_to_mine->MineCoins(coins_mined_per_hour);
 
+        // Selected coin is drained for mining, remove it from vector
+        if (mined_amount == 0.0) {
+            auto element = find(this->coins.begin(), this->coins.end(), coin_to_mine);
+            if (element != this->coins.end())
+                this->coins.erase(element);
+        }
+
         Exchange* exchange = this->SelectBestExchangeFor(coin_to_mine);
         if (exchange == nullptr) {
             continue;

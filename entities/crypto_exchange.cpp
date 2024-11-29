@@ -105,9 +105,9 @@ Exchange* Exchange::SelectBestExchangeFor(Coin* coin) {
     Exchange* best_exchange = nullptr;
     double best_exchange_fee_factor = 0.0;
     for (Exchange* exchange : coin->GetExchanges()) {
-        if (!exchange->IsClosed() && exchange->GetTolalFeeFactor() >= best_exchange_fee_factor) {
+        if (!exchange->IsClosed() && exchange->GetTotalFeeFactor() >= best_exchange_fee_factor) {
             best_exchange = exchange;
-            best_exchange_fee_factor = exchange->GetTolalFeeFactor();
+            best_exchange_fee_factor = exchange->GetTotalFeeFactor();
         }
     }
     return best_exchange;

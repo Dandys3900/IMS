@@ -19,10 +19,10 @@ Exchange::Exchange(double fee, CoinsStats init_coins, vector<Investor*> customer
 }
 
 Exchange::~Exchange() {
-
+    this->PrintStats();
 }
 
-double Exchange::ExecuteTransaction(double amount, Investor* buyer, Coin* coin, TransactionType type) {
+double Exchange::ExecuteTransaction(double amount, Coin* coin, TransactionType type) {
     // Get current amount of requested coin
     double& coin_amount = this->stacked_coins.at(coin->GetCoinName());
 
@@ -37,7 +37,7 @@ double Exchange::ExecuteTransaction(double amount, Investor* buyer, Coin* coin, 
         coin_amount -= amount;
 
         // Update total amount of sold coins
-        this->sold_coins +- amount;
+        this->sold_coins += amount;
     }
     else { // type == SELL
         coin->DecreaseSupply(amount);
@@ -64,7 +64,7 @@ double Exchange::GetInterestRate(const string coin_name) {
     double stacked_coins = this->stacked_coins.at(coin_name);
     double initial_amount = this->initial_coins.at(coin_name);
 
-    return (stacked_coins / initial_amount);
+    return (1 - (stacked_coins / initial_amount));
 }
 
 double Exchange::GetTotalFeeFactor() {
@@ -85,12 +85,10 @@ void Exchange::PrintStats() {
     cout << " -> Taxes: " << this->gov_taxes                      << endl;
     cout << " -> Number of customers: " << this->customers.size() << endl;
     cout << " -> Traded coins: "                                  << endl;
-    for (auto coin : this->coins) {
-        string coinname = coin->GetCoinName();
-        cout << "Name: " << coinname << "amount: " << this->stacked_coins.at(coinname) << endl;
-    }
-    cout << " -> Closed by government: " << this->closed_by_gov << endl;
-    cout << "-------------------------"                         << endl;
+    for (auto coin : this->stacked_coins)
+        cout << "Name: " << coin.first << " amount: " << coin.second << endl;
+    cout << " -> Closed by government: " << (this->closed_by_gov ? "true" : "false") << endl;
+    cout << "-------------------------" << endl;
 }
 
 Exchange* Exchange::SelectRandomExchangeFor(Coin* coin) {

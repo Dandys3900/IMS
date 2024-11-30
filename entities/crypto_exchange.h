@@ -27,7 +27,7 @@ class Exchange : public Facility {
         Exchange(double fee, CoinsStats init_coins, vector<Investor*> customers, vector<Coin*> coins);
         ~Exchange();
 
-        double ExecuteTransaction(double amount, Investor* buyer, Coin* coin, TransactionType type);
+        double ExecuteTransaction(double amount, Coin* coin, TransactionType type);
         void ClosingExchange();
         double GetInterestRate(const string coin_name);
         double GetTotalFeeFactor();

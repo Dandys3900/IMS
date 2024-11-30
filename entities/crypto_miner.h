@@ -21,9 +21,8 @@ class CryptoMiner : public Process {
 
         void Behavior() override;
         void SetMiningPerformance(double new_value);
-        CoinsStats GetTotalMinedCoins();
         void PrintStats();
-    
+
     protected:
         Coin* SelectCoinToMine();
         Coin* SelectCoinToMineRandomChoice();

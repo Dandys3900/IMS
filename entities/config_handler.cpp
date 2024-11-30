@@ -1,7 +1,5 @@
 #include "crypto_coin.h"
-#include "base_investor.h"
-#include "longterm_investor.h"
-#include "shortterm_investor.h"
+#include "crypto_investor.h"
 #include "crypto_miner.h"
 #include "government.h"
 #include "crypto_exchange.h"
@@ -80,7 +78,8 @@ void ConfigHandler::InitSimulation() {
 
             if (entity_name == "investor_longterm")
                 this->investors.push_back(
-                    new LongTermInvestor(
+                    new Investor(
+                        Investor::InvestorType::LONG_TERM,
                         stats,
                         thresholds,
                         coins
@@ -88,7 +87,8 @@ void ConfigHandler::InitSimulation() {
                 );
             else // investor_shortterm
                 this->investors.push_back(
-                    new ShortTermInvestor(
+                    new Investor(
+                        Investor::InvestorType::SHORT_TERM,
                         stats,
                         thresholds,
                         coins

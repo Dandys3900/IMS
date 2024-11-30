@@ -1,4 +1,4 @@
-#include "base_investor.h"
+#include "crypto_investor.h"
 #include "crypto_exchange.h"
 #include "crypto_coin.h"
 

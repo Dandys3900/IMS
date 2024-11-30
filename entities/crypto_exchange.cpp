@@ -1,5 +1,5 @@
 #include "crypto_coin.h"
-#include "base_investor.h"
+#include "crypto_investor.h"
 #include "crypto_exchange.h"
 
 Exchange::Exchange(double fee, CoinsStats init_coins, vector<Investor*> customers, vector<Coin*> coins)

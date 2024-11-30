@@ -32,9 +32,9 @@ void Investor::PrintStats() {
     cout << "-------------------------" << endl;
     cout << "Investor stats:"           << endl;
     cout << " -> Traided coins: "       << endl;
-    for (auto coin : this->coins) {
-        string coinname = coin->GetCoinName();
-        cout << "Name: " << coinname << " final balance: " << this->balance.at(coinname) << endl;
+    for (auto coin : this->balance) {
+        string coinname = coin.first;
+        cout << "Name: " << coinname << " final balance: " << coin.second << endl;
         cout << "Sell threshold: " << this->thresholds.at(coinname).first << endl;
         cout << "Buy threshold: " << this->thresholds.at(coinname).second << endl;
     }

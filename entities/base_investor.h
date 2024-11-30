@@ -17,8 +17,8 @@ class Investor : public Process {
 
     public:
         Investor(CoinsStats initial_balance, CoinsThresholds thresholds, vector<Coin*> coins);
-        virtual ~Investor()
-        {
+        virtual ~Investor() {
+            this->PrintStats();
         }
 
         virtual void BuyCoins(double amount, Coin* coin)  = 0;

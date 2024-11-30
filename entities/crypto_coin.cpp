@@ -4,6 +4,7 @@
 
 Coin::Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply)
     : coin_name(coin_name),
+      init_price(initial_price),
       price(initial_price),
       mining_efficiency(mining_efficiency),
       total_supply(total_supply),
@@ -15,7 +16,7 @@ Coin::Coin(const string coin_name, double initial_price, double mining_efficienc
 }
 
 Coin::~Coin() {
-
+    this->PrintStats();
 }
 
 void Coin::Behavior() {
@@ -63,7 +64,9 @@ void Coin::UpdatePrice() {
     double avg_exch_demand = 0.0;
     for (auto exchange : this->exchanges)
         avg_exch_demand += exchange->GetInterestRate(this->coin_name);
-    avg_exch_demand = (avg_exch_demand / this->exchanges.size());
+    // Avoid zero division
+    if (this->exchanges.size())
+        avg_exch_demand = (avg_exch_demand / this->exchanges.size());
 
     // Create total average demand
     demand = ((demand + avg_exch_demand) / 2);
@@ -72,7 +75,9 @@ void Coin::UpdatePrice() {
     double avg_sentiment = 0.0;
     for (auto trader : this->traders)
         avg_sentiment += trader->GetInvestorSentiment();
-    avg_sentiment = (avg_sentiment / this->traders.size());
+    // Avoid zero division
+    if (this->traders.size())
+        avg_sentiment = (avg_sentiment / this->traders.size());
 
     /* POSSIBLE CALCULATIONS FOR COIN PRICE (to be decided which to use)
         double current_time = ((Time + 1) / 24);
@@ -132,23 +137,34 @@ void Coin::AddTrader(Investor* trader) {
     this->traders.push_back(trader);
 }
 
-vector<Investor*> Coin::GetTraders() {
-    return this->traders;
-}
+void Coin::StorePriceHistory() {
+    ofstream price_file("price_vals", ios::app);
 
-vector<double> Coin::GetPriceHistory() {
-    return this->price_history;
+    if (price_file.is_open()) {
+        price_file << "Price history of " << this->coin_name << endl;
+        price_file << "-----------------------------------------------" << endl;
+
+        for (auto price : this->price_history)
+            price_file << price << ", ";
+
+        price_file << endl << "-----------------------------------------------" << endl;
+        price_file.close();
+    }
 }
 
 void Coin::PrintStats() {
     cout << "-------------------------"           << endl;
     cout << "Coin stats:"                         << endl;
-    cout << " -> Name: "                          << this->GetCoinName() << endl;
-    cout << " -> Current price: "                 << this->GetCurrentPrice() << endl;
-    cout << " -> Mining efficiency: "             << this->GetMiningEfficiency() << endl;
-    cout << " -> Count of traders:"               << this->GetTraders().size() << endl;
+    cout << " -> Name: "                          << this->coin_name << endl;
+    cout << " -> Init price: "                    << this->init_price << endl;
+    cout << " -> Current price: "                 << this->price << endl;
+    cout << " -> Mining efficiency: "             << (this->mining_efficiency * 100) << "%" << endl;
+    cout << " -> Count of traders: "               << this->traders.size() << endl;
     cout << " -> Total supply of coins: "         << this->total_supply << endl;
     cout << " -> Coins available for mining: "    << this->available_coins << endl;
     cout << " -> Coins in market (circulating): " << this->circulating_supply << endl;
     cout << "-------------------------"           << endl;
+
+    // Store price history into file
+    this->StorePriceHistory();
 }

@@ -8,12 +8,14 @@ class Coin;
 class ElonTweet : public Process {
     private:
         Coin* coin;
+        string done_changes; // Document all price changes done by this class
 
     public:
         ElonTweet(Coin* coin);
         ~ElonTweet();
 
         void Behavior() override;
+        void PrintStats();
 };
 
 #endif // ELONTWEET_H

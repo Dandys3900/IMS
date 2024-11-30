@@ -54,6 +54,9 @@ void ConfigHandler::InitSimulation() {
                     string key = coin_data.key();
                     // Get coin info (name, count)
                     if (key != "sell_threshold" && key != "buy_threshold") {
+                        if (this->coins.empty())
+                            throw ("Missing coins for investor, can't proceed");
+
                         // Find coin matching given coin name
                         for (auto coin : this->coins) {
                             if (coin->GetCoinName() == key) {
@@ -98,6 +101,9 @@ void ConfigHandler::InitSimulation() {
             CoinsStats stats;
 
             for (auto [key, value] : entity.at("initial_coin_amount").items()) {
+                if (this->coins.empty())
+                    throw ("Missing coins for exchange, can't proceed");
+
                 for (auto coin : this->coins) {
                     if (coin->GetCoinName() == (string)key) {
                         coins.push_back(coin);
@@ -116,6 +122,9 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else if (entity_name == "government") {
+            if (this->exchanges.empty())
+                throw ("Missing exchanges for government, can't proceed");
+
             this->government = new Government(
                 (double)entity.at("init_taxes"),
                 this->exchanges
@@ -129,6 +138,9 @@ void ConfigHandler::InitSimulation() {
             vector<Coin*> coins;
 
             for (auto targetcoin : entity.at("coins")) {
+                if (this->coins.empty())
+                    throw ("Missing coins for miner, can't proceed");
+
                 for (auto coin : this->coins) {
                     if (coin->GetCoinName() == (string)targetcoin)
                         coins.push_back(coin);
@@ -145,6 +157,9 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else if (entity_name == "elon_tweeter") {
+            if (this->coins.empty())
+                throw ("Missing coins for random price change (Elon), can't proceed");
+
             // Randomly select coin which will Elon affect
             int coin_index = static_cast<int>(Uniform(0, this->coins.size()));
 
@@ -155,6 +170,9 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else if (entity_name == "tech_dev") {
+            if (this->miners.empty())
+                throw ("Missing miners for tech devs, can't proceed");
+
             this->tech_devs.push_back(
                 new TechDeveloper(
                     (double)entity.at("mining_performance_boost"),
@@ -179,7 +197,8 @@ void ConfigHandler::ActivateSimulation() {
         elon->Activate();
     for (auto tech_dev : this->tech_devs)
         tech_dev->Activate();
-    this->government->Activate();
+    if (this->government)
+        this->government->Activate();
 }
 
 template <typename T>

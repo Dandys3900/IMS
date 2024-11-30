@@ -12,6 +12,9 @@ int main () {
     } catch (const exception& e) {
         cout << "Error: " << e.what() << endl;
         return EXIT_FAILURE;
+    } catch (const char* e) {
+        cout << "Error: " << e << endl;
+        return EXIT_FAILURE;
     }
 
     Run();

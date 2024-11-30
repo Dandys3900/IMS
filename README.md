@@ -1,31 +1,53 @@
-# IMS-Project
-Repository for FIT VUT IMS project.
+# IMS-Projekt
 
-*******************************************************************************
+## Formát JSON konfiguračního souboru
+Pro zajištění korektního běhu simulačního programu je nezbytné dodržet následující pravidla.
 
-## Coding style rules:
+Pořadí definování jednotlivých entit/účastníků dle typu je pevně dáno následovně:
 
-    1. Indentation:                     4 spaces
-    2. Variable and function names:     snake_case
-        f.e. name_of_function (...)
-    3. Type and structure names:        PascalCase
-        f.e. StructName {...},
-        class name
-    4. Constant/maker names:            SCREAMING_SNAKE_CASE
-        f.e. #define CONST_NAME 1
-    5. Pointers names:                  with var's data type
-        e.g. int* name;
-    6. Compound parentheses:            on the same line
-        f.e. method (...) {
-            ...
-        }
-    7. Spaces around binary operators
-        f.e. a + b;
-    8. For, while, if:                 spaces before the bracket
-        f.e. for (...)
-    9. Spaces after a comma, semicolon, bracket
-    10. File names:                     snake_case.filetype
+1. "type" : "sim_duration" [! Očekávaná pouze jedna entita tohoto typu !]
+2. "type" : "coin"
+3. "type" : "investor_*"
+4. "type" : "exchange"
+5. "type" : "government" [! Očekávaná pouze jedna entita tohoto typu !]
+6. "type" : "miner"
+7. "type" : "elon_tweeter"
+8. "type" : "tech_dev"
 
-### Push strategy:                       requests
-
--------------------------------------------------------------------------------
+Přičemž atributy entity každého typu jsou rovněž dané, jak lze vidět níže:
+1. `"sim_duration"`
+    - `"sim_duration_years" : [unsigned int]`
+2. `"coin"`
+    - `"name" : [unique string]`
+    - `"initial_price" : [double/int > 0]`
+    - `"mining_efficiency" : [0.0 - 1.0]`
+    - `"total_supply" : [unsigned int]`
+    - `"circulating_supply" : [unsigned int]`
+3. `"investor_*"`
+    - `"coins" : [`
+        - `{`
+            - `[název vytvořené mince] : [unsigned int] (výchozí vlastněný počet)`
+            - `"sell_threshold" : [double/int > 0] (pokud hodnota mince přesáhne tuto hodnotu, zahájí prodej)`
+            - `"buy_threshold" : [double/int > 0] (pokud hodnota mince klesne pod tuto hodnotu, zahájí nákup)`
+        - `}`
+        - `...`
+    - `]`
+4. `"exchange"`
+    - `"fee" : [0.0 - 1.0]`
+    - `"initial_coin_amount" : {`
+        - `[název vytvořené mince] : [unsigned int] (výchozí vlastněný počet)`
+        - `... (výčet pro další mince)`
+    - `}`
+5. `"government"`
+    - `"init_taxes" : [0.0 - 1.0]`
+6. `"miner"`
+    - `"intial_mining_rate_per_hour" : [unsigned int]`
+    - `"hardware_performance" : [0.0 - 1.0]`
+    - `"coins" : [`
+        - `[název vytvořené mince]`
+        - `... (výčet pro další mince)`
+    - `]`
+    - `"mining_strategy" : ["random_choice" / "best_choice"] (určuje způsob, jakým si těžař vybere minci, kterou bude pro daný půlden těžit)`
+7. `"elon_tweeter"` (nemá žadné atributy)
+8. `"tech_dev"`
+    - `"mining_performance_boost" : [double/int > 0]`

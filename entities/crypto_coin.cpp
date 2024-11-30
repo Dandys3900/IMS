@@ -24,7 +24,7 @@ void Coin::Behavior() {
         // Every hour, update coin's price
         this->UpdatePrice();
 
-        Wait(EVERY_HOUR);
+        Wait(EVERY_DAY);
     }
 }
 
@@ -62,37 +62,48 @@ void Coin::UpdatePrice() {
 
     // Calculate average demand from each exchange trading this coin
     double avg_exch_demand = 0.0;
-    for (auto exchange : this->exchanges)
+    for (auto exchange : this->exchanges) {
         avg_exch_demand += exchange->GetInterestRate(this->coin_name);
+    }
+    cout << avg_exch_demand << endl;
     // Avoid zero division
-    if (this->exchanges.size())
-        avg_exch_demand = (avg_exch_demand / this->exchanges.size());
+    if (!this->exchanges.empty())
+        avg_exch_demand = (avg_exch_demand / (double)this->exchanges.size());
 
-    // Create total average demand
-    demand = ((demand + avg_exch_demand) / 2);
+    cout << "Coin demand: " << demand << endl;
+    cout << "Avg dex demand: " << avg_exch_demand << endl;
+
+    if (demand == 0.0 || avg_exch_demand == 0.0)
+        demand = -0.01;
+    else // Create total average demand
+        demand += avg_exch_demand; //((demand + avg_exch_demand) / 2);
 
     // Calculate average sentiment among traders
     double avg_sentiment = 0.0;
     for (auto trader : this->traders)
         avg_sentiment += trader->GetInvestorSentiment();
     // Avoid zero division
-    if (this->traders.size())
+    if (!this->traders.empty())
         avg_sentiment = (avg_sentiment / this->traders.size());
 
-    /* POSSIBLE CALCULATIONS FOR COIN PRICE (to be decided which to use)
-        double current_time = ((Time + 1) / 24);
-        this->price += (
-            pow((current_time / 693), 5.526) * pow(10, (
-                pow(0.9998, current_time) * (2 * pow(
-                abs(sin(2.983 * sqrt(sqrt(current_time)) - 0.57)) - 1, 2) - 1))
-            ));
+    double current_time = ceil((Time + 1) / 24.0);
+    this->price += (
+        pow((current_time / 693), 5.526) * pow(10, (
+            pow(0.9998, current_time) * (2 * pow(
+            abs(sin(2.983 * sqrt(sqrt(current_time)) - 0.57)) - 1, 2) - 1) * avg_sentiment)
+        ) * demand);
 
+    // Avoid negative price
+    if (this->price < 0.0)
+        this->price = 0.0;
+
+    /*
         // Update price
         this->price += ((demand * this->mining_efficiency * avg_sentiment) / this->total_supply);
     */
 
-    double current_time = Time + 1;
-    this->price = (this->price * pow(10, pow(0.7, current_time) * sin(2 * M_PI * current_time - 0.4) * demand * avg_sentiment));
+    //double current_time = Time + 1;
+    //this->price = (this->price * pow(10, pow(0.7, current_time) * sin(2 * M_PI * current_time - 0.4) * demand * avg_sentiment));
 }
 
 double Coin::MineCoins(double amount) {

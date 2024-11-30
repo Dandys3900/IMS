@@ -37,12 +37,14 @@ void Investor::BuyCoins(Coin* coin) {
     if (exchange == nullptr) {
         return;
     }
+    Seize(*exchange);
 	// Buy roughly 84$ worth of coins
     double coins_to_buy = Normal((84 / coin->GetCurrentPrice()), 10);
 	// Sentiment effect - buy more when sentiment is high and buy less when sentiment is low. Long term investor is not as affected by sentiment when buying
     coins_to_buy += coins_to_buy * this->GetInvestorSentiment() * (this->investor_type == InvestorType::SHORT_TERM ? 1.0 : 0.5);
     double coins_bought = exchange->BuyCoins(coin, coins_to_buy);
     this->balance.at(coin->GetCoinName()) += coins_bought;
+    Release(*exchange);
 }
 
 void Investor::SellCoins(Coin* coin) {
@@ -51,6 +53,7 @@ void Investor::SellCoins(Coin* coin) {
     if (exchange == nullptr) {
         return;
     }
+    Seize(*exchange);
     // Sell some of the coins
     double coins_to_sell = this->balance.at(coin->GetCoinName()) * (this->investor_type == InvestorType::SHORT_TERM ? 0.75 : 0.5);
 	// Sentiment effect - sell more when sentiment is low and sell less when sentiment is high. Long term investor is not as affected by sentiment when selling
@@ -58,6 +61,7 @@ void Investor::SellCoins(Coin* coin) {
 	// Sell the coins
     double _profit = exchange->SellCoins(coin, coins_to_sell);
     this->balance.at(coin->GetCoinName()) -= coins_to_sell;
+    Release(*exchange);
 }
 
 void Investor::PositiveNewsReaction() {

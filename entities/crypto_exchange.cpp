@@ -22,30 +22,25 @@ Exchange::~Exchange() {
     this->PrintStats();
 }
 
-double Exchange::ExecuteTransaction(double amount, Coin* coin, TransactionType type) {
-    // Get current amount of requested coin
-    double& coin_amount = this->stacked_coins.at(coin->GetCoinName());
-
-    // Transfer amount of coins to buyer with current fees
-    if (type == BUY) {
-        // Check if exchange has enough of coins, otherwise send 0.0 to try another exchange
-        if (coin_amount < amount)
-            return 0.0;
-
-        coin->IncreaseSupply(amount);
-        // Update exchange current amount of this coin
-        coin_amount -= amount;
-
-        // Update total amount of sold coins
-        this->sold_coins += amount;
-    }
-    else { // type == SELL
-        coin->DecreaseSupply(amount);
-        // Update exchange current amount of this coin
-        coin_amount += amount;
-    }
-    // Apply government taxes and individual exchange fee
+// Buy coins from exchange
+double Exchange::BuyCoins(Coin* coin, double amount) {
+    amount = min(amount, this->stacked_coins.at(coin->GetCoinName()));
+    coin->IncreaseSupply(amount);
+    // Update exchange current amount of this coin
+    this->stacked_coins.at(coin->GetCoinName()) -= amount;
+    // Update total amount of sold coins
+    this->sold_coins += amount;
+    // Return actual number of bought coins. Apply government taxes and individual exchange fee
     return amount * this->GetTotalFeeFactor();
+}
+
+// Sell coins to exchange
+double Exchange::SellCoins(Coin* coin, double amount) {
+    coin->DecreaseSupply(amount);
+    // Update exchange current amount of this coin
+    this->stacked_coins.at(coin->GetCoinName()) += amount;
+    // Return money amount from this transaction. Apply government taxes and individual exchange fee
+    return amount * coin->GetCurrentPrice() * this->GetTotalFeeFactor();
 }
 
 void Exchange::ClosingExchange() {
@@ -79,6 +74,10 @@ bool Exchange::IsClosed() {
     return this->closed_by_gov;
 }
 
+bool Exchange::HasCoins(Coin* coin) {
+    return this->stacked_coins.at(coin->GetCoinName()) > 0.0;
+}
+
 void Exchange::PrintStats() {
     cout << "-------------------------"                           << endl;
     cout << "Exchange stats:"                                     << endl;
@@ -92,18 +91,23 @@ void Exchange::PrintStats() {
 }
 
 Exchange* Exchange::SelectRandomExchangeFor(Coin* coin) {
-    vector<Exchange*> exchanges = coin->GetExchanges();
-    if (exchanges.empty()) {
+    vector<Exchange*> usable_exchanges = {};
+    for (Exchange* exchange : coin->GetExchanges()) {
+        if (exchange->HasCoins(coin)) {
+            usable_exchanges.push_back(exchange);
+        }
+    }
+    if (usable_exchanges.empty()) {
         return nullptr;
     }
-    return exchanges.at((std::size_t)Uniform(0, exchanges.size()));
+    return usable_exchanges.at((size_t)Uniform(0, usable_exchanges.size()));
 }
 
 Exchange* Exchange::SelectBestExchangeFor(Coin* coin) {
     Exchange* best_exchange = nullptr;
     double best_exchange_fee_factor = 0.0;
     for (Exchange* exchange : coin->GetExchanges()) {
-        if (!exchange->IsClosed() && exchange->GetTotalFeeFactor() >= best_exchange_fee_factor) {
+        if (!exchange->IsClosed() && exchange->HasCoins(coin) && exchange->GetTotalFeeFactor() >= best_exchange_fee_factor) {
             best_exchange = exchange;
             best_exchange_fee_factor = exchange->GetTotalFeeFactor();
         }

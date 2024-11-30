@@ -46,7 +46,7 @@ void CryptoMiner::Behavior() {
         }
 
         Seize(*exchange);
-        double profit = exchange->ExecuteTransaction(mined_amount, coin_to_mine, TransactionType::SELL);
+        double profit = exchange->SellCoins(coin_to_mine, mined_amount);
         this->coins_mined.at(coin_to_mine->GetCoinName()) += mined_amount;
         this->profits.at(coin_to_mine->GetCoinName()) += profit;
         Release(*exchange);

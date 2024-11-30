@@ -6,12 +6,6 @@
 class Coin;
 class Investor;
 
-// Transaction types
-enum TransactionType {
-    BUY,
-    SELL
-};
-
 class Exchange : public Facility {
     private:
         double transaction_fee;
@@ -27,12 +21,14 @@ class Exchange : public Facility {
         Exchange(double fee, CoinsStats init_coins, vector<Investor*> customers, vector<Coin*> coins);
         ~Exchange();
 
-        double ExecuteTransaction(double amount, Coin* coin, TransactionType type);
+        double BuyCoins(Coin* coin, double amount);
+        double SellCoins(Coin* coin, double amount);
         void ClosingExchange();
         double GetInterestRate(const string coin_name);
         double GetTotalFeeFactor();
         void UpdateGovTaxes(double new_value);
         bool IsClosed();
+        bool HasCoins(Coin* coin);
         void PrintStats();
 
         static Exchange* SelectRandomExchangeFor(Coin* coin);

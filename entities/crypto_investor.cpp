@@ -34,20 +34,21 @@ void Investor::Behavior() {
 
 void Investor::BuyCoins(Coin* coin) {
     Exchange* exchange = Exchange::SelectRandomExchangeFor(coin);
-    if (coin == nullptr) {
+    if (exchange == nullptr) {
         return;
     }
 	// Buy roughly 84$ worth of coins
     double coins_to_buy = Normal((84 / coin->GetCurrentPrice()), 10);
 	// Sentiment effect - buy more when sentiment is high and buy less when sentiment is low. Long term investor is not as affected by sentiment when buying
     coins_to_buy += coins_to_buy * this->GetInvestorSentiment() * (this->investor_type == InvestorType::SHORT_TERM ? 1.0 : 0.5);
-    double coins_bought = exchange->ExecuteTransaction(coins_to_buy, coin, TransactionType::BUY);
+    double coins_bought = exchange->BuyCoins(coin, coins_to_buy);
     this->balance.at(coin->GetCoinName()) += coins_bought;
 }
 
 void Investor::SellCoins(Coin* coin) {
+	cout << "sell" << endl;
     Exchange* exchange = Exchange::SelectBestExchangeFor(coin);
-    if (coin == nullptr) {
+    if (exchange == nullptr) {
         return;
     }
     // Sell some of the coins
@@ -55,8 +56,8 @@ void Investor::SellCoins(Coin* coin) {
 	// Sentiment effect - sell more when sentiment is low and sell less when sentiment is high. Long term investor is not as affected by sentiment when selling
     coins_to_sell -= coins_to_sell * this->GetInvestorSentiment() * (this->investor_type == InvestorType::SHORT_TERM ? 1.0 : 0.25);
 	// Sell the coins
-    double coins_sold = exchange->ExecuteTransaction(coins_to_sell, coin, TransactionType::SELL);
-    this->balance.at(coin->GetCoinName()) -= coins_sold;
+    double _profit = exchange->SellCoins(coin, coins_to_sell);
+    this->balance.at(coin->GetCoinName()) -= coins_to_sell;
 }
 
 void Investor::PositiveNewsReaction() {

@@ -4,7 +4,7 @@
 
 Investor::Investor(InvestorType investor_type, CoinsStats initial_balance, CoinsThresholds thresholds, vector<Coin*> coins)
     : investor_type(investor_type),
-	  balance(initial_balance),
+      balance(initial_balance),
       thresholds(thresholds),
       coins(coins),
       sentiment(0.0)
@@ -21,9 +21,9 @@ Investor::~Investor() {
 void Investor::Behavior() {
 	 while (true) {
         for (Coin* coin : this->coins) {
-            if (coin->GetCurrentPrice() < this->thresholds.at(coin->GetCoinName()).first) {
+            if (coin->GetCurrentPrice() > this->thresholds.at(coin->GetCoinName()).first) {
                 this->SellCoins(coin);
-            } else if (coin->GetCurrentPrice() > this->thresholds.at(coin->GetCoinName()).second) {
+            } else if (coin->GetCurrentPrice() < this->thresholds.at(coin->GetCoinName()).second) {
                 this->BuyCoins(coin);
             }
         }
@@ -40,7 +40,7 @@ void Investor::BuyCoins(Coin* coin) {
 	// Buy roughly 84$ worth of coins
     double coins_to_buy = Normal((84 / coin->GetCurrentPrice()), 10);
 	// Sentiment effect - buy more when sentiment is high and buy less when sentiment is low. Long term investor is not as affected by sentiment when buying
-    coins_to_buy += coins_to_buy * this->GetInvestorSentiment() * (this->investor_type == InvestorType::SHORT_TERM ? 1.0 : 0.5);;
+    coins_to_buy += coins_to_buy * this->GetInvestorSentiment() * (this->investor_type == InvestorType::SHORT_TERM ? 1.0 : 0.5);
     double coins_bought = exchange->ExecuteTransaction(coins_to_buy, coin, TransactionType::BUY);
     this->balance.at(coin->GetCoinName()) += coins_bought;
 }

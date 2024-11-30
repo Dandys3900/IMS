@@ -37,4 +37,4 @@ class Investor : public Process {
         void PrintStats();
 };
 
-#endif // BINVESTOR_H
+#endif // INVESTOR_H

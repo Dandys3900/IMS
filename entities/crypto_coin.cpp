@@ -95,14 +95,6 @@ void Coin::UpdatePrice() {
     // Avoid negative price
     if (this->price < 0.0)
         this->price = 0.0;
-
-    /*
-        // Update price
-        this->price += ((demand * this->mining_efficiency * avg_sentiment) / this->total_supply);
-    */
-
-    //double current_time = Time + 1;
-    //this->price = (this->price * pow(10, pow(0.7, current_time) * sin(2 * M_PI * current_time - 0.4) * demand * avg_sentiment));
 }
 
 double Coin::MineCoins(double amount) {

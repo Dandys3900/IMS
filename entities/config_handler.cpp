@@ -14,12 +14,16 @@ ConfigHandler::ConfigHandler() {}
 
 ConfigHandler::~ConfigHandler() {
     freeSet(this->exchanges);
+    // Clear vectors
+    this->coins.clear();
+    this->investors.clear();
+    this->miners.clear();
+    this->elons.clear();
+    this->tech_devs.clear();
+    this->government = nullptr;
 }
 
 void ConfigHandler::InitSimulation(string config_file_name) {
-    freeSet(this->exchanges);
-    // freeSet(this->miners);
-
     // Load simulation config from JSON file
     ifstream config_file(config_file_name);
     json config = json::parse(config_file);
@@ -199,7 +203,7 @@ void ConfigHandler::ActivateSimulation() {
     for (auto investor : this->investors)
         investor->Activate();
     for (auto miner : this->miners)
-        miner->Activate(); // SEGFAULT
+        miner->Activate();
     for (auto elon : this->elons)
         elon->Activate();
     for (auto tech_dev : this->tech_devs)

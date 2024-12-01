@@ -62,26 +62,23 @@ void Coin::UpdatePrice() {
 
     // Calculate average demand from each exchange trading this coin
     double avg_exch_demand = 0.0;
-    for (auto exchange : this->exchanges) {
+    for (auto exchange : this->exchanges)
         avg_exch_demand += exchange->GetInterestRate(this->coin_name);
-    }
-    cout << avg_exch_demand << endl;
+
     // Avoid zero division
     if (!this->exchanges.empty())
         avg_exch_demand = (avg_exch_demand / (double)this->exchanges.size());
 
-    cout << "Coin demand: " << demand << endl;
-    cout << "Avg dex demand: " << avg_exch_demand << endl;
-
     if (demand == 0.0 || avg_exch_demand == 0.0)
         demand = -0.01;
     else // Create total average demand
-        demand += avg_exch_demand; //((demand + avg_exch_demand) / 2);
+        demand = ((demand + avg_exch_demand) / 2);
 
     // Calculate average sentiment among traders
     double avg_sentiment = 0.0;
     for (auto trader : this->traders)
         avg_sentiment += trader->GetInvestorSentiment();
+
     // Avoid zero division
     if (!this->traders.empty())
         avg_sentiment = (avg_sentiment / this->traders.size());
@@ -110,14 +107,12 @@ double Coin::MineCoins(double amount) {
     // Given amount is available
     if (amount <= this->available_coins) {
         this->available_coins -= amount;
-        this->IncreaseSupply(amount);
         return amount;
     }
 
     // We don't have enough, return what we have
     double current_amount = this->available_coins;
     this->available_coins = 0.0;
-    this->IncreaseSupply(current_amount);
 
     return current_amount;
 }

@@ -181,7 +181,7 @@ void ConfigHandler::InitSimulation() {
             );
         }
         else
-            throw ProgramException("Invalid entity type: " + (string)entity.at("type"));
+            throw ("Invalid entity type: " + (string)entity.at("type"));
     }
 }
 

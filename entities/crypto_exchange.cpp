@@ -92,7 +92,7 @@ bool Exchange::HasCoins(Coin* coin) {
 void Exchange::PrintStats() {
     cout << "-------------------------"                           << endl;
     cout << "Exchange stats:"                                     << endl;
-    cout << " -> Taxes: " << this->gov_taxes                      << endl;
+    cout << " -> Taxes: " << (this->gov_taxes * 100) << " %"      << endl;
     cout << " -> Sold coins: " << this->sold_coins                << endl;
     cout << " -> Number of customers: " << this->customers.size() << endl;
     cout << " -> Traded coins: "                                  << endl;

@@ -19,12 +19,12 @@
 #include <exception>
 #include <map>
 #include <cmath>
+#include <iomanip>
 
 using namespace std;
 
 /***** OTHERS *****/
 #include "time.h"
-#include "custom_exception.h"
 
 // Key is coin (unique) name and value is owned amount
 using CoinsStats = map<string, double>;

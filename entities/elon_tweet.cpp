@@ -3,7 +3,8 @@
 
 ElonTweet::ElonTweet(Coin* coin)
     : coin(coin),
-      done_changes("")
+      done_changes(""),
+      selected_coin_name(coin->GetCoinName())
 {
 }
 
@@ -28,7 +29,7 @@ void ElonTweet::Behavior() {
 
 void ElonTweet::PrintStats() {
     cout << "-------------------------" << endl;
-    cout << "Unpredicted price change stats (aka Elon tweet):" << endl;
+    cout << "Unpredicted price change stats (aka Elon tweet) for " << this->selected_coin_name << ":" << endl;
     cout << this->done_changes << endl;
     cout << "-------------------------" << endl;
 }

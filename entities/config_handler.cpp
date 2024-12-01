@@ -7,23 +7,27 @@
 #include "tech_devs.h"
 #include "config_handler.h"
 
-ConfigHandler::ConfigHandler() {
-    // Load simulation config from JSON file
-    ifstream config_file("sim_config.json");
-    this->config = json::parse(config_file);
+// Define static member
+string ConfigHandler::price_vals_file_name;
 
-    // Clear file for storing coins price change over time
-    ofstream price_file("price_vals", ios::trunc);
-    price_file.close();
-}
+ConfigHandler::ConfigHandler() {}
 
 ConfigHandler::~ConfigHandler() {
     freeSet(this->exchanges);
 }
 
-void ConfigHandler::InitSimulation() {
+void ConfigHandler::InitSimulation(string config_file_name) {
+    // Load simulation config from JSON file
+    ifstream config_file(config_file_name);
+    json config = json::parse(config_file);
+
+    // Clear file for storing coins price change over time
+    price_vals_file_name = config_file_name.substr(0, config_file_name.rfind(".")) + string(".price_vals");
+    ofstream price_file(price_vals_file_name, ios::trunc);
+    price_file.close();
+
     // Iterate over JSON array and create requested entities
-    for (auto entity : this->config) {
+    for (auto entity : config) {
         // Determine entity type
         string entity_name = entity.at("type");
 

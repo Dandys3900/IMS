@@ -15,8 +15,10 @@ class TechDeveloper;
 using json = nlohmann::json;
 
 class ConfigHandler {
+    public:
+        static string price_vals_file_name;
+
     private:
-        json config;
         // Store created entities
         vector<Coin*> coins;
         vector<Investor*> investors;
@@ -33,7 +35,7 @@ class ConfigHandler {
         ConfigHandler();
         ~ConfigHandler();
 
-        void InitSimulation();
+        void InitSimulation(string config_file);
         void ActivateSimulation();
 };
 

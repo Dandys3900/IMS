@@ -1,6 +1,7 @@
 #include "crypto_investor.h"
 #include "crypto_exchange.h"
 #include "crypto_coin.h"
+#include "config_handler.h"
 
 Coin::Coin(const string coin_name, double initial_price, double mining_efficiency, double total_supply, double circulating_supply)
     : coin_name(coin_name),
@@ -137,7 +138,7 @@ void Coin::AddTrader(Investor* trader) {
 }
 
 void Coin::StorePriceHistory() {
-    ofstream price_file("price_vals", ios::app);
+    ofstream price_file(ConfigHandler::price_vals_file_name, ios::app);
 
     if (price_file.is_open()) {
         price_file << "Price history of " << this->coin_name << endl;

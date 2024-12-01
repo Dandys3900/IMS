@@ -1,24 +1,22 @@
 #include "entities/config_handler.h"
 
-int main () {
+int runExperiment(string filename) {
     ConfigHandler* config_handler = new ConfigHandler();
-    // Globally set output precious to 3-decimal places
-    cout << fixed << setprecision(3);
 
     try {
-        RandomSeed(time(NULL));
         // Load enitities from
-        config_handler->InitSimulation();
+        config_handler->InitSimulation(filename);
         // Activate entities
         config_handler->ActivateSimulation();
+
     } catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        cerr << "Error: " << e.what() << endl;
         return EXIT_FAILURE;
     } catch (const char* e) {
-        cout << "Error: " << e << endl;
+        cerr << "Error: " << e << endl;
         return EXIT_FAILURE;
     } catch (...) {
-        cout << "Error during simulation init, make sure config file has correct format" << endl;
+        cerr << "Error during simulation init, make sure config file has correct format" << endl;
         return EXIT_FAILURE;
     }
 
@@ -26,6 +24,21 @@ int main () {
 
     // Cleanup
     delete config_handler;
+
+    return EXIT_SUCCESS;
+}
+
+int main (int argc, char* argv[]) {
+    // Globally set output precious to 3-decimal places
+    cout << fixed << setprecision(3);
+    RandomSeed(time(NULL));
+
+    for (int i = 1; i < argc; i++) {
+        int experiment_result = runExperiment(string(argv[i]));
+        if (experiment_result != EXIT_SUCCESS) {
+            return experiment_result;
+        }
+    }
 
     return EXIT_SUCCESS;
 }

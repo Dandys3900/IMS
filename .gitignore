@@ -36,4 +36,4 @@ ims-sim
 
 .vscode/
 
-price_vals
+*.price_vals

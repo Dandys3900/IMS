@@ -1,14 +1,14 @@
 [
     {
         "type": "sim_duration",
-        "sim_duration_years": 2
+        "sim_duration_years": 5
     },
     {
         "type": "coin",
         "name": "coin1",
         "initial_price": 20,
         "mining_efficiency": 0.5,
-        "total_supply": 200000,
+        "total_supply": 2000000,
         "circulating_supply": 65000
     },
     {
@@ -53,21 +53,21 @@
     },
     {
         "type": "exchange",
-        "fee": 0.25,
+        "fee": 0.025,
         "initial_coin_amount": {
             "coin1": 23500
         }
     },
     {
         "type": "exchange",
-        "fee": 0.1,
+        "fee": 0.01,
         "initial_coin_amount": {
             "coin1": 40000
         }
     },
     {
         "type": "government",
-        "init_taxes": 0.1
+        "init_taxes": 0.01
     },
     {
         "type": "miner",

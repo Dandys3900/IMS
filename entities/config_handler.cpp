@@ -101,7 +101,7 @@ bool ConfigHandler::ReadCoin(json& coin) {
             initial_price,
             mining_efficiency,
             total_supply,
-            9999999999999 // HACK - calculate circulating_supply dynamically
+            0 // Calculate circulating_supply dynamically from config
         )
     );
     return true;
@@ -141,6 +141,7 @@ bool ConfigHandler::ReadExchange(json& exchange) {
             if (coin->GetCoinName() == name) {
                 traded_coins.push_back(coin);
                 initial_coin_amounts.insert({name, initial_amount});
+                coin->IncreaseSupply(initial_amount);
                 break;
             }
         }
@@ -203,6 +204,7 @@ bool ConfigHandler::ReadInvestor(json& investor) {
                 traded_coins.push_back(coin);
                 initial_coin_amounts.insert({name, initial_amount});
                 coin_thresholds.insert({name, {sell_threshold, buy_threshold}});
+                coin->IncreaseSupply(initial_amount);
                 break;
             }
         }

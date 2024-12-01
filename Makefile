@@ -11,6 +11,6 @@ clean:
 	rm -f $(EXE)
 
 run: ims-sim
-	./ims-sim sim_config.json sim_config_copy.json
+	./ims-sim
 
 .PHONY: all run clean

@@ -69,8 +69,9 @@ void Coin::UpdatePrice() {
     if (!this->exchanges.empty())
         avg_exch_demand = (avg_exch_demand / (double)this->exchanges.size());
 
+    // Any demand is zero -> reverse demand to lower price
     if (demand == 0.0 || avg_exch_demand == 0.0)
-        demand = -0.01;
+        demand = ((demand + avg_exch_demand) * (-1));
     else // Create total average demand
         demand = ((demand + avg_exch_demand) / 2);
 
@@ -81,7 +82,7 @@ void Coin::UpdatePrice() {
 
     // Avoid zero division
     if (!this->traders.empty())
-        avg_sentiment = (avg_sentiment / this->traders.size());
+        avg_sentiment = (avg_sentiment / (double)this->traders.size());
 
     double current_time = ceil((Time + 1) / 24.0);
     this->price += (

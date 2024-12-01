@@ -14,13 +14,6 @@ ConfigHandler::ConfigHandler() {}
 
 ConfigHandler::~ConfigHandler() {
     freeSet(this->exchanges);
-    // Clear vectors
-    this->coins.clear();
-    this->investors.clear();
-    this->miners.clear();
-    this->elons.clear();
-    this->tech_devs.clear();
-    this->government = nullptr;
 }
 
 void ConfigHandler::InitSimulation(string config_file_name) {

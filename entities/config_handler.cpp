@@ -39,6 +39,7 @@ bool ConfigHandler::InitSimulation(string config_file_name) {
     ENSURE(this->ReadInvestors(config));
     ENSURE(this->ReadMiners(config));
     ENSURE(this->ReadExchanges(config));
+    ENSURE(this->ReadDevelopers(config));
 
     return true;
 }
@@ -73,7 +74,7 @@ bool ConfigHandler::ReadCoins(json& json_object) {
     ENSURE(json_object.contains("coins"));
     
     json& coins = json_object.at("coins");
-    ENSURE(coins.is_array());
+    ENSURE(coins.is_array() && !coins.empty());
     for (json& coin : coins) {
         ENSURE(this->ReadCoin(coin));
     }
@@ -112,7 +113,7 @@ bool ConfigHandler::ReadExchanges(json& json_object) {
     ENSURE(json_object.contains("exchanges"));
 
     json& exchanges = json_object.at("exchanges");
-    ENSURE(exchanges.is_array());
+    ENSURE(exchanges.is_array() && !exchanges.empty());
     for (json& exchange : exchanges) {
         ENSURE(this->ReadExchange(exchange));
     }
@@ -160,7 +161,9 @@ bool ConfigHandler::ReadExchange(json& exchange) {
 
 bool ConfigHandler::ReadInvestors(json& json_object) {
     ENSURE(json_object.is_object());
-    ENSURE(json_object.contains("investors"));
+    if (!json_object.contains("investors")) {
+        return true;
+    }
 
     json& investors = json_object.at("investors");
     ENSURE(investors.is_array());
@@ -223,7 +226,9 @@ bool ConfigHandler::ReadInvestor(json& investor) {
 
 bool ConfigHandler::ReadMiners(json& json_object) {
     ENSURE(json_object.is_object());
-    ENSURE(json_object.contains("miners"));
+    if (!json_object.contains("miners")) {
+        return true;
+    }
 
     json& miners = json_object.at("miners");
     ENSURE(miners.is_array());
@@ -270,9 +275,37 @@ bool ConfigHandler::ReadMiner(json& miner) {
     return true;
 }
 
+bool ConfigHandler::ReadDevelopers(json& json_object) {
+    ENSURE(json_object.is_object());
+    if (!json_object.contains("tech_developers")) {
+        return true;
+    }
+    
+    json& tech_developers = json_object.at("tech_developers");
+    ENSURE(tech_developers.is_array());
+    for (json& tech_developer : tech_developers) {
+        ENSURE(this->ReadDeveloper(tech_developer));
+    }
+    return true;
+}
+
+bool ConfigHandler::ReadDeveloper(json& developer) {
+    ENSURE(developer.is_object());
+    ENSURE(developer.contains("mining_performance_boost") && developer.at("mining_performance_boost").is_number());
+
+    double mining_performance_boost = (double)developer.at("mining_performance_boost");
+    
+    ENSURE(mining_performance_boost > 0.0);
+
+    this->tech_devs.push_back(new TechDeveloper(mining_performance_boost, this->miners));
+    return true;
+}
+
 bool ConfigHandler::ReadElonTweeters(json& json_object) {
     ENSURE(json_object.is_object());
-    ENSURE(json_object.contains("elon_tweeters"));
+    if (!json_object.contains("elon_tweeters")) {
+        return true;
+    }
     
     json& elon_tweeters = json_object.at("elon_tweeters");
     ENSURE(elon_tweeters.is_array());
@@ -287,7 +320,7 @@ bool ConfigHandler::ReadElonTweeter(json& elon_tweeter) {
     ENSURE(elon_tweeter.contains("affected_coin") && elon_tweeter.at("affected_coin").is_string());
 
     string affected_coin = (string)elon_tweeter.at("affected_coin");
-    if (affected_coin == "random") {
+    if (affected_coin == "random" && !this->coins.empty()) {
         // Randomly select coin which will Elon affect
         int coin_index = static_cast<int>(Uniform(0, this->coins.size()));
         this->elons.push_back(new ElonTweet(this->coins.at(coin_index)));

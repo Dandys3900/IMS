@@ -49,6 +49,8 @@ class ConfigHandler {
         bool ReadInvestor(json& investor);
         bool ReadMiners(json& json_object);
         bool ReadMiner(json& miner);
+        bool ReadDevelopers(json& json_object);
+        bool ReadDeveloper(json& developer);
         bool ReadElonTweeters(json& json_object);
         bool ReadElonTweeter(json& elon_tweeter);
 };

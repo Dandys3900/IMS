@@ -14,11 +14,12 @@ TechDeveloper::~TechDeveloper() {
 void TechDeveloper::Behavior() {
     while (true) {
         // Randomly select crypto miner which HW performance will be boosted
-        int miner_index = static_cast<int>(Uniform(0, this->miners.size()));
-
-        this->miners.at(miner_index)->SetMiningPerformance(
-            this->performance_boost
-        );
+        if (!this->miners.empty()) {
+            int miner_index = static_cast<int>(Uniform(0, this->miners.size()));
+            this->miners.at(miner_index)->SetMiningPerformance(
+                this->performance_boost
+            );
+        }
 
         // Repeat every 1-2 years
         Wait(Uniform(YEAR, 2 * YEAR));

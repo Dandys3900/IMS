@@ -10,13 +10,18 @@
 // Define static member
 string ConfigHandler::price_vals_file_name;
 
+#define ENSURE(expression)\
+if (!(expression)) {\
+    return false;\
+}
+
 ConfigHandler::ConfigHandler() {}
 
 ConfigHandler::~ConfigHandler() {
     freeSet(this->exchanges);
 }
 
-void ConfigHandler::InitSimulation(string config_file_name) {
+bool ConfigHandler::InitSimulation(string config_file_name) {
     // Load simulation config from JSON file
     ifstream config_file(config_file_name);
     json config = json::parse(config_file);
@@ -25,168 +30,269 @@ void ConfigHandler::InitSimulation(string config_file_name) {
     price_vals_file_name = config_file_name.substr(0, config_file_name.rfind(".")) + string(".price_vals");
     ofstream price_file(price_vals_file_name, ios::trunc);
     price_file.close();
+    
+    // DO NOT CHANGE THE ORDER OF READINGS - some objects are dependent on others being validated first
+    ENSURE(this->ReadConfigHead(config));
+    ENSURE(this->ReadGovernment(config));
+    ENSURE(this->ReadCoins(config));
+    ENSURE(this->ReadElonTweeters(config));
+    ENSURE(this->ReadInvestors(config));
+    ENSURE(this->ReadMiners(config));
+    ENSURE(this->ReadExchanges(config));
 
-    // Iterate over JSON array and create requested entities
-    for (auto entity : config) {
-        // Determine entity type
-        string entity_name = entity.at("type");
+    return true;
+}
 
-        if (entity_name == "sim_duration") {
-            // Load given simulation duration (in years)
-            Init(0, (double)entity.at("sim_duration_years") * YEAR);
-        }
-        else if (entity_name == "coin") {
-            this->coins.push_back(
-                new Coin(
-                    (string)entity.at("name"),
-                    (double)entity.at("initial_price"),
-                    (double)entity.at("mining_efficiency"),
-                    (double)entity.at("total_supply"),
-                    (double)entity.at("circulating_supply")
-                )
-            );
-        }
-        else if (entity_name == "investor_longterm" || entity_name == "investor_shortterm") {
-            // Create set of coins trader will trade
-            vector<Coin*> coins;
-            CoinsStats stats;
-            CoinsThresholds thresholds;
 
-            for (auto coin : entity.at("coins")) {
-                for (auto coin_data : coin.items()) {
-                    // Extract key from each dictionary record
-                    string key = coin_data.key();
-                    // Get coin info (name, count)
-                    if (key != "sell_threshold" && key != "buy_threshold") {
-                        if (this->coins.empty())
-                            throw ("Missing coins for investor, can't proceed");
+bool ConfigHandler::ReadConfigHead(json& json_object) {
+    ENSURE(json_object.is_object());
+    ENSURE(json_object.contains("simulation_duration_years") && json_object.at("simulation_duration_years").is_number());
+    
+    double simulation_duration_years = (double)json_object.at("simulation_duration_years");
+    ENSURE(simulation_duration_years > 0.0);
 
-                        // Find coin matching given coin name
-                        for (auto coin : this->coins) {
-                            if (coin->GetCoinName() == key) {
-                                coins.push_back(coin);
-                                stats.insert({key, (double)coin_data.value()});
-                            }
-                        }
-                        // Add threshold for this coin (coinname, sell and buy thresholds)
-                        thresholds.insert({
-                            key, {
-                                (double)coin.at("sell_threshold"),
-                                (double)coin.at("buy_threshold")
-                            }
-                        });
-                        break;
-                    }
-                }
-            }
+    Init(0, simulation_duration_years * YEAR);
+    return true;
+}
 
-            if (entity_name == "investor_longterm")
-                this->investors.push_back(
-                    new Investor(
-                        Investor::InvestorType::LONG_TERM,
-                        stats,
-                        thresholds,
-                        coins
-                    )
-                );
-            else // investor_shortterm
-                this->investors.push_back(
-                    new Investor(
-                        Investor::InvestorType::SHORT_TERM,
-                        stats,
-                        thresholds,
-                        coins
-                    )
-                );
-        }
-        else if (entity_name == "exchange") {
-            // Create set of coins exchange will trade
-            vector<Coin*> coins;
-            CoinsStats stats;
+bool ConfigHandler::ReadGovernment(json& json_object) {
+    ENSURE(json_object.is_object());
+    ENSURE(json_object.contains("government") && json_object.at("government").is_object());
+    json& government = json_object.at("government");
+    ENSURE(government.contains("initial_taxes") && government.at("initial_taxes").is_number());
 
-            for (auto [key, value] : entity.at("initial_coin_amount").items()) {
-                if (this->coins.empty())
-                    throw ("Missing coins for exchange, can't proceed");
+    double initial_taxes = (double)government.at("initial_taxes");
+    ENSURE(initial_taxes >= 0.0 && initial_taxes <= 1.0);
+    
+    this->government = new Government(initial_taxes, this->exchanges);
+    return true;
+}
 
-                for (auto coin : this->coins) {
-                    if (coin->GetCoinName() == (string)key) {
-                        coins.push_back(coin);
-                        stats.insert({(string)key, (double)value});
-                    }
-                }
-            }
-
-            this->exchanges.push_back(
-                new Exchange(
-                    (double)entity.at("fee"),
-                    stats,
-                    this->investors,
-                    coins
-                )
-            );
-        }
-        else if (entity_name == "government") {
-            if (this->exchanges.empty())
-                throw ("Missing exchanges for government, can't proceed");
-
-            this->government = new Government(
-                (double)entity.at("init_taxes"),
-                this->exchanges
-            );
-            // Populate government taxes for all exchanges
-            for (auto exchange : this->exchanges)
-                exchange->UpdateGovTaxes(this->government->GetCurrentTaxes());
-        }
-        else if (entity_name == "miner") {
-            // Create set of coins miner will mine
-            vector<Coin*> coins;
-
-            for (auto targetcoin : entity.at("coins")) {
-                if (this->coins.empty())
-                    throw ("Missing coins for miner, can't proceed");
-
-                for (auto coin : this->coins) {
-                    if (coin->GetCoinName() == (string)targetcoin)
-                        coins.push_back(coin);
-                }
-            }
-
-            this->miners.push_back(
-                new CryptoMiner(
-                    (double)entity.at("intial_mining_rate_per_hour"),
-                    (double)entity.at("hardware_performance"),
-                    coins,
-                    (string)entity.at("mining_strategy")
-                )
-            );
-        }
-        else if (entity_name == "elon_tweeter") {
-            if (this->coins.empty())
-                throw ("Missing coins for random price change (Elon), can't proceed");
-
-            // Randomly select coin which will Elon affect
-            int coin_index = static_cast<int>(Uniform(0, this->coins.size()));
-
-            this->elons.push_back(
-                new ElonTweet(
-                    this->coins.at(coin_index)
-                )
-            );
-        }
-        else if (entity_name == "tech_dev") {
-            if (this->miners.empty())
-                throw ("Missing miners for tech devs, can't proceed");
-
-            this->tech_devs.push_back(
-                new TechDeveloper(
-                    (double)entity.at("mining_performance_boost"),
-                    this->miners
-                )
-            );
-        }
-        else
-            throw ("Invalid entity type: " + (string)entity.at("type"));
+bool ConfigHandler::ReadCoins(json& json_object) {
+    ENSURE(json_object.is_object());
+    ENSURE(json_object.contains("coins"));
+    
+    json& coins = json_object.at("coins");
+    ENSURE(coins.is_array());
+    for (json& coin : coins) {
+        ENSURE(this->ReadCoin(coin));
     }
+    return true;
+}
+
+bool ConfigHandler::ReadCoin(json& coin) {
+    ENSURE(coin.is_object());
+    ENSURE(coin.contains("name") && coin.at("name").is_string());
+    ENSURE(coin.contains("initial_price") && coin.at("initial_price").is_number());
+    ENSURE(coin.contains("mining_efficiency") && coin.at("mining_efficiency").is_number());
+    ENSURE(coin.contains("total_supply") && coin.at("total_supply").is_number_integer());
+
+    double initial_price = (double)coin.at("initial_price");
+    double mining_efficiency = (double)coin.at("mining_efficiency");
+    double total_supply = (double)coin.at("total_supply");
+
+    ENSURE(initial_price > 0.0);    
+    ENSURE(mining_efficiency > 0.0 && mining_efficiency <= 1.0);
+    ENSURE(total_supply > 0.0);
+      
+    this->coins.push_back(
+        new Coin(
+            (string)coin.at("name"),
+            initial_price,
+            mining_efficiency,
+            total_supply,
+            9999999999999 // HACK - calculate circulating_supply dynamically
+        )
+    );
+    return true;
+}
+
+bool ConfigHandler::ReadExchanges(json& json_object) {
+    ENSURE(json_object.is_object());
+    ENSURE(json_object.contains("exchanges"));
+
+    json& exchanges = json_object.at("exchanges");
+    ENSURE(exchanges.is_array());
+    for (json& exchange : exchanges) {
+        ENSURE(this->ReadExchange(exchange));
+    }
+    return true;
+}
+
+bool ConfigHandler::ReadExchange(json& exchange) {
+    vector<Coin*> traded_coins;
+    CoinsStats initial_coin_amounts;
+
+    ENSURE(exchange.is_object());
+    ENSURE(exchange.contains("fee") && exchange.at("fee").is_number());
+    ENSURE(exchange.contains("traded_coins") && exchange.at("traded_coins").is_array());
+
+    for (json& traded_coin : exchange.at("traded_coins")) {
+        ENSURE(traded_coin.contains("name") && traded_coin.at("name").is_string());
+        ENSURE(traded_coin.contains("initial_amount") && traded_coin.at("initial_amount").is_number());
+
+        string name = (string)traded_coin.at("name");
+        double initial_amount = (double)traded_coin.at("initial_amount");
+
+        ENSURE(initial_amount >= 0.0);
+
+        // Make sure that the coin exists
+        for (Coin* coin : this->coins) {
+            if (coin->GetCoinName() == name) {
+                traded_coins.push_back(coin);
+                initial_coin_amounts.insert({name, initial_amount});
+                break;
+            }
+        }
+    }
+
+    this->exchanges.push_back(
+        new Exchange(
+            (double)exchange.at("fee"),
+            initial_coin_amounts,
+            this->investors,
+            traded_coins
+        )
+    );
+    return true;
+}
+
+bool ConfigHandler::ReadInvestors(json& json_object) {
+    ENSURE(json_object.is_object());
+    ENSURE(json_object.contains("investors"));
+
+    json& investors = json_object.at("investors");
+    ENSURE(investors.is_array());
+    for (json& investor : investors) {
+        ENSURE(this->ReadInvestor(investor));
+    }
+    return true;
+}
+
+bool ConfigHandler::ReadInvestor(json& investor) {
+    vector<Coin*> traded_coins;
+    CoinsStats initial_coin_amounts;
+    CoinsThresholds coin_thresholds;
+
+    ENSURE(investor.is_object());
+    ENSURE(investor.contains("type") && investor.at("type").is_string());
+    ENSURE(investor.contains("traded_coins") && investor.at("traded_coins").is_array());
+    
+    ENSURE(investor.at("type") == "short_term" || investor.at("type") == "long_term");
+    Investor::InvestorType investor_type = investor.at("type") == "short_term" ? Investor::InvestorType::SHORT_TERM : Investor::InvestorType::LONG_TERM;
+
+    for (json& traded_coin : investor.at("traded_coins")) {
+        ENSURE(traded_coin.contains("name") && traded_coin.at("name").is_string());
+        ENSURE(traded_coin.contains("initial_amount") && traded_coin.at("initial_amount").is_number());
+        ENSURE(traded_coin.contains("sell_threshold") && traded_coin.at("sell_threshold").is_number());
+        ENSURE(traded_coin.contains("buy_threshold") && traded_coin.at("buy_threshold").is_number());
+
+        string name = (string)traded_coin.at("name");
+        double initial_amount = (double)traded_coin.at("initial_amount");
+        double sell_threshold = (double)traded_coin.at("sell_threshold");
+        double buy_threshold = (double)traded_coin.at("buy_threshold");
+
+        ENSURE(initial_amount >= 0.0);
+        ENSURE(sell_threshold >= 0.0);
+        ENSURE(buy_threshold >= 0.0);
+        ENSURE(buy_threshold < sell_threshold);
+
+        // Make sure that the coin exists
+        for (Coin* coin : this->coins) {
+            if (coin->GetCoinName() == name) {
+                traded_coins.push_back(coin);
+                initial_coin_amounts.insert({name, initial_amount});
+                coin_thresholds.insert({name, {sell_threshold, buy_threshold}});
+                break;
+            }
+        }
+    }
+
+    this->investors.push_back(
+        new Investor(
+            investor_type,
+            initial_coin_amounts,
+            coin_thresholds,
+            traded_coins
+        )
+    );
+    return true;
+}
+
+bool ConfigHandler::ReadMiners(json& json_object) {
+    ENSURE(json_object.is_object());
+    ENSURE(json_object.contains("miners"));
+
+    json& miners = json_object.at("miners");
+    ENSURE(miners.is_array());
+    for (json& miner : miners) {
+        ENSURE(this->ReadMiner(miner));
+    }
+    return true;
+}
+
+bool ConfigHandler::ReadMiner(json& miner) {
+    ENSURE(miner.is_object());
+    ENSURE(miner.contains("intial_mining_rate_per_hour") && miner.at("intial_mining_rate_per_hour").is_number());
+    ENSURE(miner.contains("hardware_performance") && miner.at("hardware_performance").is_number());
+    ENSURE(miner.contains("mining_strategy") && miner.at("mining_strategy").is_string());
+    ENSURE(miner.contains("mining_coins") && miner.at("mining_coins").is_array());
+    double intial_mining_rate_per_hour = (double)miner.at("intial_mining_rate_per_hour");
+    double hardware_performance = (double)miner.at("hardware_performance");
+    string mining_strategy = (string)miner.at("mining_strategy");
+
+    ENSURE(intial_mining_rate_per_hour > 0.0);
+    ENSURE(hardware_performance > 0.0 && hardware_performance <= 1.0);
+    ENSURE(mining_strategy == "random_choice" || mining_strategy == "best_choice");
+
+    vector<Coin*> mining_coins;
+    for (json& mining_coin : miner.at("mining_coins")) {
+        ENSURE(mining_coin.is_string());
+        // Make sure that the coin exists
+        for (Coin* coin : this->coins) {
+            if (coin->GetCoinName() == (string)mining_coin) {
+                mining_coins.push_back(coin);
+                break;
+            }
+        }
+    }
+
+    this->miners.push_back(
+        new CryptoMiner(
+            intial_mining_rate_per_hour,
+            hardware_performance,
+            mining_coins,
+            mining_strategy
+        )
+    );
+    return true;
+}
+
+bool ConfigHandler::ReadElonTweeters(json& json_object) {
+    ENSURE(json_object.is_object());
+    ENSURE(json_object.contains("elon_tweeters"));
+    
+    json& elon_tweeters = json_object.at("elon_tweeters");
+    ENSURE(elon_tweeters.is_array());
+    for (json& elon_tweeter : elon_tweeters) {
+        ENSURE(this->ReadElonTweeter(elon_tweeter));
+    }
+    return true;
+}
+
+bool ConfigHandler::ReadElonTweeter(json& elon_tweeter) {
+    ENSURE(elon_tweeter.is_object());
+    ENSURE(elon_tweeter.contains("affected_coin") && elon_tweeter.at("affected_coin").is_string());
+
+    string affected_coin = (string)elon_tweeter.at("affected_coin");
+    // Ensure the coin exists
+    for (Coin* coin : this->coins) {
+        if (coin->GetCoinName() == affected_coin) {
+            this->elons.push_back(new ElonTweet(coin));
+            return true;
+        }
+    }
+    return false;
 }
 
 void ConfigHandler::ActivateSimulation() {

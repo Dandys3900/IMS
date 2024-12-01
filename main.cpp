@@ -10,13 +10,13 @@ int runExperiment(string filename) {
         config_handler->ActivateSimulation();
 
     } catch (const exception& e) {
-        cout << "Error: " << e.what() << endl;
+        cerr << "Error: " << e.what() << endl;
         return EXIT_FAILURE;
     } catch (const char* e) {
-        cout << "Error: " << e << endl;
+        cerr << "Error: " << e << endl;
         return EXIT_FAILURE;
     } catch (...) {
-        cout << "Error during simulation init, make sure config file has correct format" << endl;
+        cerr << "Error during simulation init, make sure config file has correct format" << endl;
         return EXIT_FAILURE;
     }
 
@@ -34,8 +34,10 @@ int main (int argc, char* argv[]) {
     RandomSeed(time(NULL));
 
     for (int i = 1; i < argc; i++) {
-        runExperiment(string(argv[i]));
-        cout << "+++++++++++++++++++++++++++++++ simulation done +++++++++++++++++++++++++++++++" << endl;
+        int experiment_result = runExperiment(string(argv[i]));
+        if (experiment_result != EXIT_SUCCESS) {
+            return experiment_result;
+        }
     }
 
     return EXIT_SUCCESS;

@@ -285,6 +285,13 @@ bool ConfigHandler::ReadElonTweeter(json& elon_tweeter) {
     ENSURE(elon_tweeter.contains("affected_coin") && elon_tweeter.at("affected_coin").is_string());
 
     string affected_coin = (string)elon_tweeter.at("affected_coin");
+    if (affected_coin == "random") {
+        // Randomly select coin which will Elon affect
+        int coin_index = static_cast<int>(Uniform(0, this->coins.size()));
+        this->elons.push_back(new ElonTweet(this->coins.at(coin_index)));
+        return true;
+    }
+
     // Ensure the coin exists
     for (Coin* coin : this->coins) {
         if (coin->GetCoinName() == affected_coin) {

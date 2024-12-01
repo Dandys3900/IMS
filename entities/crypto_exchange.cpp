@@ -52,6 +52,10 @@ double Exchange::SellCoins(Coin* coin, double amount) {
 }
 
 void Exchange::ClosingExchange() {
+    // Already closed
+    if (this->closed_by_gov)
+        return;
+
     this->closed_by_gov = true;
     // For all traded coins, update their supplies
     for (auto coin : this->coins)
@@ -92,7 +96,8 @@ bool Exchange::HasCoins(Coin* coin) {
 void Exchange::PrintStats() {
     cout << "-------------------------"                           << endl;
     cout << "Exchange stats:"                                     << endl;
-    cout << " -> Taxes: " << (this->gov_taxes * 100) << " %"      << endl;
+    cout << " -> Fee: " << (this->transaction_fee * 100) << " %"  << endl;
+    cout << " -> Gov taxes: " << (this->gov_taxes * 100) << " %"  << endl;
     cout << " -> Sold coins: " << this->sold_coins                << endl;
     cout << " -> Number of customers: " << this->customers.size() << endl;
     cout << " -> Traded coins: "                                  << endl;

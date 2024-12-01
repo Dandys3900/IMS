@@ -41,7 +41,6 @@ double Exchange::BuyCoins(Coin* coin, double amount) {
 
 // Sell coins to exchange
 double Exchange::SellCoins(Coin* coin, double amount) {
-    coin->IncreaseSupply(amount);
     // Update volume of coins being circulating
     this->change_volume.at(coin->GetCoinName()) += amount;
     // Update exchange current amount of this coin

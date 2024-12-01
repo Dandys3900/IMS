@@ -50,6 +50,7 @@ void CryptoMiner::Behavior() {
         this->coins_mined.at(coin_to_mine->GetCoinName()) += mined_amount;
         this->profits.at(coin_to_mine->GetCoinName()) += profit;
         Release(*exchange);
+        coin_to_mine->IncreaseSupply(mined_amount);
     }
 }
 

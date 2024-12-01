@@ -5,7 +5,10 @@ int runExperiment(string filename) {
 
     try {
         // Load enitities from
-        config_handler->InitSimulation(filename);
+        if (!config_handler->InitSimulation(filename)) {
+            cerr << "Error during simulation init, make sure config file has correct format" << endl;
+            return EXIT_FAILURE;
+        }
         // Activate entities
         config_handler->ActivateSimulation();
 

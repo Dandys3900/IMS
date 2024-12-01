@@ -24,7 +24,7 @@ class ConfigHandler {
         vector<CryptoMiner*> miners;
         vector<ElonTweet*> elons;
         vector<TechDeveloper*> tech_devs;
-        Government* government;
+        Government* government = nullptr;
 
         template <typename T>
         void freeSet(std::vector<T*>& set);

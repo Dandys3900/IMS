@@ -16,6 +16,7 @@ class Exchange : public Facility {
         vector<Investor*> customers;
         vector<Coin*> coins;
         bool closed_by_gov;
+        CoinsStats change_volume;
 
     public:
         Exchange(double fee, CoinsStats init_coins, vector<Investor*> customers, vector<Coin*> coins);

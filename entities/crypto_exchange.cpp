@@ -11,11 +11,14 @@ Exchange::Exchange(double fee, CoinsStats init_coins, vector<Investor*> customer
       gov_taxes(0.0),
       customers(customers),
       coins(coins),
-      closed_by_gov(false)
+      closed_by_gov(false),
+      change_volume()
 {
     // Register this exchange to all coins it trades
-    for (auto coin : this->coins)
+    for (auto coin : this->coins) {
         coin->AddExchange(this);
+        this->change_volume.insert({coin->GetCoinName(), 0.0});
+    }
 }
 
 Exchange::~Exchange() {
@@ -25,7 +28,10 @@ Exchange::~Exchange() {
 // Buy coins from exchange
 double Exchange::BuyCoins(Coin* coin, double amount) {
     amount = min(amount, this->stacked_coins.at(coin->GetCoinName()));
+
     coin->IncreaseSupply(amount);
+    // Update volume of coins being circulating
+    this->change_volume.at(coin->GetCoinName()) += amount;
     // Update exchange current amount of this coin
     this->stacked_coins.at(coin->GetCoinName()) -= amount;
     // Update total amount of sold coins
@@ -36,7 +42,9 @@ double Exchange::BuyCoins(Coin* coin, double amount) {
 
 // Sell coins to exchange
 double Exchange::SellCoins(Coin* coin, double amount) {
-    coin->DecreaseSupply(amount);
+    coin->IncreaseSupply(amount);
+    // Update volume of coins being circulating
+    this->change_volume.at(coin->GetCoinName()) += amount;
     // Update exchange current amount of this coin
     this->stacked_coins.at(coin->GetCoinName()) += amount;
     // Return money amount from this transaction. Apply government taxes and individual exchange fee
@@ -56,10 +64,13 @@ void Exchange::ClosingExchange() {
 
 double Exchange::GetInterestRate(const string coin_name) {
     // Calculate current value of interest for given coin
-    double stacked_coins = this->stacked_coins.at(coin_name);
+    double stacked_coins = this->change_volume.at(coin_name);
     double initial_amount = this->initial_coins.at(coin_name);
 
-    return (1 - (stacked_coins / initial_amount));
+    // Reset volume for given coin
+    this->change_volume.at(coin_name) = 0.0;
+
+    return (stacked_coins / initial_amount);
 }
 
 double Exchange::GetTotalFeeFactor() {
@@ -81,7 +92,8 @@ bool Exchange::HasCoins(Coin* coin) {
 void Exchange::PrintStats() {
     cout << "-------------------------"                           << endl;
     cout << "Exchange stats:"                                     << endl;
-    cout << " -> Taxes: " << this->gov_taxes                      << endl;
+    cout << " -> Taxes: " << (this->gov_taxes * 100) << " %"      << endl;
+    cout << " -> Sold coins: " << this->sold_coins                << endl;
     cout << " -> Number of customers: " << this->customers.size() << endl;
     cout << " -> Traded coins: "                                  << endl;
     for (auto coin : this->stacked_coins)

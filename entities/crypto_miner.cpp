@@ -23,7 +23,7 @@ CryptoMiner::~CryptoMiner() {
 
 void CryptoMiner::Behavior() {
     while (true) {
-        Wait(EVERY_HOUR);
+        Wait(EVERY_12H);
 
         Coin* coin_to_mine = this->SelectCoinToMine();
         if (coin_to_mine == nullptr) {
@@ -31,7 +31,7 @@ void CryptoMiner::Behavior() {
         }
 
         double coins_mined_per_hour = this->mining_rate * coin_to_mine->GetMiningEfficiency() * this->hardware_performance;
-        double mined_amount = coin_to_mine->MineCoins(coins_mined_per_hour);
+        double mined_amount = coin_to_mine->MineCoins(12 * coins_mined_per_hour);
 
         // Selected coin is drained for mining, remove it from vector
         if (mined_amount == 0.0) {

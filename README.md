@@ -1,20 +1,8 @@
 # IMS-Projekt
 
 ## Formát JSON konfiguračního souboru
-Pro zajištění korektního běhu simulačního programu je nezbytné dodržet následující pravidla.
+Pro zajištění korektního běhu simulačního programu je nezbytné dodržet formát konfiguračního souboru, jak lze vidět níže:
 
-Pořadí definování jednotlivých entit/účastníků dle typu je pevně dáno následovně:
-
-1. "type" : "simulation_duration_years" [! Očekávaná pouze jedna entita tohoto typu !]
-2. "type" : "coins"
-3. "type" : "investors"
-4. "type" : "exchanges"
-5. "type" : "government" [! Očekávaná pouze jedna entita tohoto typu !]
-6. "type" : "miners"
-7. "type" : "elon_tweeters"
-8. "type" : "tech_developers"
-
-Přičemž atributy entity každého typu jsou rovněž dané, jak lze vidět níže:
 1. `"simulation_duration_years" : [unsigned int]`
 2. `"coins" : [`
     - `{`

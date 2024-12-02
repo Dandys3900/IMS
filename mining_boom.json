@@ -8,7 +8,7 @@
 			"name": "coin1",
 			"initial_price": 20,
 			"mining_efficiency": 0.5,
-			"total_supply": 2000000
+			"total_supply": 200000
 		}
 	],
 	"exchanges": [

@@ -1,148 +1,168 @@
-[
-    {
-        "type": "sim_duration",
-        "sim_duration_years": 2
-    },
-    {
-        "type": "coin",
-        "name": "coin1",
-        "initial_price": 100,
-        "mining_efficiency": 0.2,
-        "total_supply": 2500,
-        "circulating_supply": 1450
-    },
-	{
-        "type": "coin",
-        "name": "coin2",
-        "initial_price": 10,
-        "mining_efficiency": 1,
-        "total_supply": 500000,
-        "circulating_supply": 63500
-    },
-    {
-        "type": "investor_longterm",
-        "coins": [
-            {
-                "coin1": 60,
-                "sell_threshold": 150,
-                "buy_threshold": 50
-            },
-            {
-                "coin2": 200,
-                "sell_threshold": 30,
-                "buy_threshold": 8
-            }
-        ]
-    },
-    {
-        "type": "investor_longterm",
-        "coins": [
-            {
-                "coin1": 40,
-                "sell_threshold": 200,
-                "buy_threshold": 75
-            },
-            {
-                "coin2": 800,
-                "sell_threshold": 50,
-                "buy_threshold": 5
-            }
-        ]
-    },
-    {
-        "type": "investor_shortterm",
-        "coins": [
-            {
-                "coin1": 20,
-                "sell_threshold": 125,
-                "buy_threshold": 50
-            },
-            {
-                "coin2": 1500,
-                "sell_threshold": 15,
-                "buy_threshold": 8
-            }
-        ]
-    },
-    {
-        "type": "investor_shortterm",
-        "coins": [
-            {
-                "coin1": 30,
-                "sell_threshold": 150,
-                "buy_threshold": 80
-            },
-            {
-                "coin2": 500,
-                "sell_threshold": 20,
-                "buy_threshold": 2
-            }
-        ]
-    },
-    {
-        "type": "investor_shortterm",
-        "coins": [
-            {
-                "coin1": 60,
-                "sell_threshold": 150,
-                "buy_threshold": 50
-            },
-            {
-                "coin2": 150,
-                "sell_threshold": 15,
-                "buy_threshold": 5
-            }
-        ]
-    },
-    {
-        "type": "investor_shortterm",
-        "coins": [
-            {
-                "coin1": 40,
-                "sell_threshold": 200,
-                "buy_threshold": 25
-            },
-            {
-                "coin2": 350,
-                "sell_threshold": 20,
-                "buy_threshold": 7
-            }
-        ]
-    },
-    {
-        "type": "exchange",
-        "fee": 0.2,
-        "initial_coin_amount": {
-            "coin1": 500,
-            "coin2": 10000
-        }
-    },
-    {
-        "type": "exchange",
-        "fee": 0.25,
-        "initial_coin_amount": {
-            "coin1": 700
-        }
-    },
-    {
-        "type": "exchange",
-        "fee": 0.15,
-        "initial_coin_amount": {
-            "coin2": 50000
-        }
-    },
-    {
-        "type": "government",
-        "init_taxes": 0.1
-    },
-    {
-        "type": "miner",
-        "intial_mining_rate_per_hour": 5,
-        "hardware_performance": 1,
-        "coins": [
-            "coin1",
-            "coin2"
-        ],
-        "mining_strategy": "random_choice"
-    }
-]
+{
+	"simulation_duration_years": 2,
+	"government": {
+		"initial_taxes": 0.1
+	},
+	"coins": [
+		{
+			"name": "coin1",
+			"initial_price": 100,
+			"mining_efficiency": 0.2,
+			"total_supply": 2500
+		},
+		{
+			"name": "coin2",
+			"initial_price": 10,
+			"mining_efficiency": 1,
+			"total_supply": 500000
+		}
+	],
+	"exchanges": [
+		{
+			"fee": 0.2,
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 500
+				},
+				{
+					"name": "coin2",
+					"initial_amount": 10000
+				}
+			]
+		},
+		{
+			"fee": 0.25,
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 700
+				}
+			]
+		},
+		{
+			"fee": 0.15,
+			"traded_coins": [
+				{
+					"name": "coin2",
+					"initial_amount": 50000
+				}
+			]
+		}
+	],
+	"investors": [
+		{
+			"type": "long_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 60,
+					"sell_threshold": 150,
+					"buy_threshold": 50
+				},
+				{
+					"name": "coin2",
+					"initial_amount": 200,
+					"sell_threshold": 30,
+					"buy_threshold": 8
+				}
+			]
+		},
+		{
+			"type": "long_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 40,
+					"sell_threshold": 200,
+					"buy_threshold": 75
+				},
+				{
+					"name": "coin2",
+					"initial_amount": 800,
+					"sell_threshold": 50,
+					"buy_threshold": 5
+				}
+			]
+		},
+		{
+			"type": "short_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 20,
+					"sell_threshold": 125,
+					"buy_threshold": 50
+				},
+				{
+					"name": "coin2",
+					"initial_amount": 1500,
+					"sell_threshold": 15,
+					"buy_threshold": 8
+				}
+			]
+		},
+		{
+			"type": "short_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 30,
+					"sell_threshold": 150,
+					"buy_threshold": 80
+				},
+				{
+					"name": "coin2",
+					"initial_amount": 500,
+					"sell_threshold": 20,
+					"buy_threshold": 2
+				}
+			]
+		},
+		{
+			"type": "short_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 60,
+					"sell_threshold": 150,
+					"buy_threshold": 50
+				},
+				{
+					"name": "coin2",
+					"initial_amount": 150,
+					"sell_threshold": 15,
+					"buy_threshold": 5
+				}
+			]
+		},
+		{
+			"type": "short_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 40,
+					"sell_threshold": 200,
+					"buy_threshold": 25
+				},
+				{
+					"name": "coin2",
+					"initial_amount": 350,
+					"sell_threshold": 20,
+					"buy_threshold": 7
+				}
+			]
+		}
+	],
+	"miners": [
+		{
+			"mining_strategy": "random_choice",
+			"intial_mining_rate_per_hour": 5,
+			"hardware_performance": 1,
+			"mining_coins": [
+				"coin1",
+				"coin2"
+			]
+		}
+	]
+}

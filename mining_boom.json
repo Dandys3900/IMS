@@ -1,150 +1,154 @@
-[
-    {
-        "type": "sim_duration",
-        "sim_duration_years": 2
-    },
-    {
-        "type": "coin",
-        "name": "coin1",
-        "initial_price": 20,
-        "mining_efficiency": 0.5,
-        "total_supply": 200000,
-        "circulating_supply": 65000
-    },
-    {
-        "type": "investor_longterm",
-        "coins": [
-            {
-                "coin1": 300,
-                "sell_threshold": 60,
-                "buy_threshold": 30
-            }
-        ]
-    },
-	{
-        "type": "investor_longterm",
-        "coins": [
-            {
-                "coin1": 500,
-                "sell_threshold": 80,
-                "buy_threshold": 20
-            }
-        ]
-    },
-    {
-        "type": "investor_shortterm",
-        "coins": [
-            {
-                "coin1": 500,
-                "sell_threshold": 40,
-                "buy_threshold": 10
-            }
-        ]
-    },
-	{
-        "type": "investor_shortterm",
-        "coins": [
-            {
-                "coin1": 200,
-                "sell_threshold": 35,
-                "buy_threshold": 15
-            }
-        ]
-    },
-    {
-        "type": "exchange",
-        "fee": 0.25,
-        "initial_coin_amount": {
-            "coin1": 23500
-        }
-    },
-    {
-        "type": "exchange",
-        "fee": 0.1,
-        "initial_coin_amount": {
-            "coin1": 40000
-        }
-    },
-    {
-        "type": "government",
-        "init_taxes": 0.1
-    },
-    {
-        "type": "miner",
-        "intial_mining_rate_per_hour": 10,
-        "hardware_performance": 0.5,
-        "coins": [
-            "coin1"
-        ],
-        "mining_strategy": "random_choice"
-    },
-	{
-        "type": "miner",
-        "intial_mining_rate_per_hour": 15,
-        "hardware_performance": 0.75,
-        "coins": [
-            "coin1"
-        ],
-        "mining_strategy": "random_choice"
-    },
-	{
-        "type": "miner",
-        "intial_mining_rate_per_hour": 15,
-        "hardware_performance": 0.8,
-        "coins": [
-            "coin1"
-        ],
-        "mining_strategy": "random_choice"
-    },
-	{
-        "type": "miner",
-        "intial_mining_rate_per_hour": 20,
-        "hardware_performance": 0.4,
-        "coins": [
-            "coin1"
-        ],
-        "mining_strategy": "best_choice"
-    },
-	{
-        "type": "miner",
-        "intial_mining_rate_per_hour": 5,
-        "hardware_performance": 0.25,
-        "coins": [
-            "coin1"
-        ],
-        "mining_strategy": "best_choice"
-    },
-	{
-        "type": "miner",
-        "intial_mining_rate_per_hour": 15,
-        "hardware_performance": 0.5,
-        "coins": [
-            "coin1"
-        ],
-        "mining_strategy": "best_choice"
-    },
-	{
-        "type": "miner",
-        "intial_mining_rate_per_hour": 15,
-        "hardware_performance": 0.4,
-        "coins": [
-            "coin1"
-        ],
-        "mining_strategy": "best_choice"
-    },
-    {
-        "type": "elon_tweeter"
-    },
-    {
-        "type": "tech_dev",
-        "mining_performance_boost": 0.1
-    },
-	{
-        "type": "tech_dev",
-        "mining_performance_boost": 0.2
-    },
-	{
-        "type": "tech_dev",
-        "mining_performance_boost": 0.15
-    }
-]
+{
+	"simulation_duration_years": 2,
+	"government": {
+		"initial_taxes": 0.1
+	},
+	"coins": [
+		{
+			"name": "coin1",
+			"initial_price": 20,
+			"mining_efficiency": 0.5,
+			"total_supply": 2000000
+		}
+	],
+	"exchanges": [
+		{
+			"fee": 0.25,
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 23500
+				}
+			]
+		},
+		{
+			"fee": 0.1,
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 40000
+				}
+			]
+		}
+	],
+	"investors": [
+		{
+			"type": "long_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 300,
+					"sell_threshold": 60,
+					"buy_threshold": 30
+				}
+			]
+		},
+		{
+			"type": "long_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 500,
+					"sell_threshold": 80,
+					"buy_threshold": 20
+				}
+			]
+		},
+		{
+			"type": "short_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 500,
+					"sell_threshold": 40,
+					"buy_threshold": 10
+				}
+			]
+		},
+		{
+			"type": "short_term",
+			"traded_coins": [
+				{
+					"name": "coin1",
+					"initial_amount": 200,
+					"sell_threshold": 35,
+					"buy_threshold": 15
+				}
+			]
+		}
+	],
+	"miners": [
+		{
+			"mining_strategy": "random_choice",
+			"intial_mining_rate_per_hour": 10,
+			"hardware_performance": 0.5,
+			"mining_coins": [
+				"coin1"
+			]
+		},
+		{
+			"mining_strategy": "random_choice",
+			"intial_mining_rate_per_hour": 15,
+			"hardware_performance": 0.75,
+			"mining_coins": [
+				"coin1"
+			]
+		},
+		{
+			"mining_strategy": "random_choice",
+			"intial_mining_rate_per_hour": 15,
+			"hardware_performance": 0.8,
+			"mining_coins": [
+				"coin1"
+			]
+		},
+		{
+			"mining_strategy": "best_choice",
+			"intial_mining_rate_per_hour": 20,
+			"hardware_performance": 0.4,
+			"mining_coins": [
+				"coin1"
+			]
+		},
+		{
+			"mining_strategy": "best_choice",
+			"intial_mining_rate_per_hour": 5,
+			"hardware_performance": 0.25,
+			"mining_coins": [
+				"coin1"
+			]
+		},
+		{
+			"mining_strategy": "best_choice",
+			"intial_mining_rate_per_hour": 15,
+			"hardware_performance": 0.5,
+			"mining_coins": [
+				"coin1"
+			]
+		},
+		{
+			"mining_strategy": "best_choice",
+			"intial_mining_rate_per_hour": 15,
+			"hardware_performance": 0.4,
+			"mining_coins": [
+				"coin1"
+			]
+		}
+	],
+	"tech_developers": [
+		{
+			"mining_performance_boost": 0.1
+		},
+		{
+			"mining_performance_boost": 0.2
+		},
+		{
+			"mining_performance_boost": 0.15
+		}
+	],
+	"elon_tweeters": [
+		{
+			"affected_coin": "coin1"
+		}
+	]
+}

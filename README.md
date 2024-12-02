@@ -5,14 +5,14 @@ Pro zajištění korektního běhu simulačního programu je nezbytné dodržet 
 
 Pořadí definování jednotlivých entit/účastníků dle typu je pevně dáno následovně:
 
-1. "type" : "sim_duration" [! Očekávaná pouze jedna entita tohoto typu !]
-2. "type" : "coin"
-3. "type" : "investor_*"
-4. "type" : "exchange"
+1. "type" : "simulation_duration_years" [! Očekávaná pouze jedna entita tohoto typu !]
+2. "type" : "coins"
+3. "type" : "investors"
+4. "type" : "exchanges"
 5. "type" : "government" [! Očekávaná pouze jedna entita tohoto typu !]
-6. "type" : "miner"
-7. "type" : "elon_tweeter"
-8. "type" : "tech_dev"
+6. "type" : "miners"
+7. "type" : "elon_tweeters"
+8. "type" : "tech_developers"
 
 Přičemž atributy entity každého typu jsou rovněž dané, jak lze vidět níže:
 1. `"simulation_duration_years" : [unsigned int]`

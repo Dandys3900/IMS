@@ -23,10 +23,14 @@ int runExperiment(string filename) {
         return EXIT_FAILURE;
     }
 
+    cout << endl << "************* Simulation " << filename << "*************" << endl;
+
     Run();
 
     // Cleanup
     delete config_handler;
+
+    cout << endl << "********************************************************" << endl;
 
     return EXIT_SUCCESS;
 }

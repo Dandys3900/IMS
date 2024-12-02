@@ -35,8 +35,24 @@ class ConfigHandler {
         ConfigHandler();
         ~ConfigHandler();
 
-        void InitSimulation(string config_file);
+        bool InitSimulation(string config_file_name);
         void ActivateSimulation();
+    
+    private:
+        bool ReadConfigHead(json& json_object);
+        bool ReadGovernment(json& json_object);
+        bool ReadCoins(json& json_object);
+        bool ReadCoin(json& coin);
+        bool ReadExchanges(json& json_object);
+        bool ReadExchange(json& exchange);
+        bool ReadInvestors(json& json_object);
+        bool ReadInvestor(json& investor);
+        bool ReadMiners(json& json_object);
+        bool ReadMiner(json& miner);
+        bool ReadDevelopers(json& json_object);
+        bool ReadDeveloper(json& developer);
+        bool ReadElonTweeters(json& json_object);
+        bool ReadElonTweeter(json& elon_tweeter);
 };
 
 #endif // CONF_HANDLER_H

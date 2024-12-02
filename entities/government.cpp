@@ -16,9 +16,10 @@ void Government::Behavior() {
         // It's 8% probability government will shutdown exchange
         if (Random() <= 0.08) {
             // Randomly select exchange to close
-            int exchange_index = static_cast<int>(Uniform(0, this->exchanges.size()));
-
-            this->exchanges.at(exchange_index)->ClosingExchange();
+            if (!this->exchanges.empty()) {
+                int exchange_index = static_cast<int>(Uniform(0, this->exchanges.size()));
+                this->exchanges.at(exchange_index)->ClosingExchange();
+            }
         }
 
         // Update taxes
